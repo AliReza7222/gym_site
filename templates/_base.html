@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Home {% endblock %}</title>
+    {% block link %}{% endblock %}
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+    <link href='https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css' rel='stylesheet'
+          type='text/css'>
+    <link href="{% static 'css/messages.css' %}" type="text/css" rel="stylesheet">
+</head>
+<body>
+    <!-- header -->
+    {% include './header.html' %}
+    <!-- end header -->
+    <br><br>
+
+    <!-- Show messages -->
+    {% if messages %}
+        {% for message in messages %}
+             {% if message.tags %}
+                  <div class="{{ message.tags }}">
+                      <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
+                        {{ message }}
+                  </div>
+             {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <!-- Content code -->
+    <div class="container" style="text-align:left">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <!-- footer -->
+</body>
+</html>

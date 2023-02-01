@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %} Sign Up {% endblock %}
+
+{% block link %}
+    <link href="{% static 'css/register.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<h1 style="text-align:center;color:#0D867E">Sign Up</h1><br>
+
+<div style="text-align:center">
+    <form method="post" >
+      {% csrf_token %}
+          <input id="username" name="username" type="text" class="feedback-input" placeholder="UserName" />
+          <input id="email" name="email" type="email" class="feedback-input" placeholder="Email" />
+          <input id="password" name="password" type="password" class="feedback-input" placeholder="Password" />
+          <input id="re_password" name="re_password" type="password" class="feedback-input" placeholder="Again Password" />
+          {% if form.errors %}
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="alert2">
+                      <span class="closebtn2" onclick="this.parentElement.style.display='none';">&times;</span>
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+          {% endif %}
+          <input type="submit" value="SUBMIT"/>
+    </form>
+</div>
+{% endblock %}
+
