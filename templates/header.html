@@ -15,25 +15,35 @@
                             Home
                         </a>
                     </li>
-                    &emsp;
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            Login
-                        </a>
-                    </li>
-                    &emsp;
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">
-                            Sign Up
-                        </a>
-                    </li>
+                    {% if not request.user.is_authenticated %}
+                        &emsp;
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                Login
+                            </a>
+                        </li>
+                        &emsp;
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">
+                                Sign Up
+                            </a>
+                        </li>
+                    {% endif %}
                     &emsp;
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             About Us
                         </a>
                     </li>
-
+                    {% if request.user.is_authenticated %}
+                         &emsp;
+                        <li style="margin-left: 972px;" class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}"
+                               style="color:#0EDEDB;background:black;border-radius: 50%;">
+                                {{ request.user }}
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
