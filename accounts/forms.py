@@ -47,3 +47,10 @@ class FormRegisterUser(forms.ModelForm):
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ChangePasswordForm(forms.Form):
+    email = forms.EmailField()
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    re_new_password = forms.CharField(widget=forms.PasswordInput)
+
