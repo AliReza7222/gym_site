@@ -44,3 +44,6 @@ class FormRegisterUser(forms.ModelForm):
         return username
 
 
+class LoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
