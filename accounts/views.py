@@ -50,6 +50,7 @@ class LoginUser(FormView):
                     messages.success(request, 'login successfully !')
                     return redirect('home')
                 messages.error(request, 'The password or email is incorrect ....')
+                return redirect('login')
         messages.error(request, 'The password or email is incorrect ....')
         return redirect('login')
 
