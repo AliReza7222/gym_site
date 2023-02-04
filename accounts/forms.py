@@ -54,3 +54,17 @@ class ChangePasswordForm(forms.Form):
     new_password = forms.CharField(widget=forms.PasswordInput)
     re_new_password = forms.CharField(widget=forms.PasswordInput)
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not MyUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("email is incorrect ")
+        return email
+
+    def clean_re_new_password(self):
+        new_password, re_new_password = self.cleaned_data.get('new_password'), self.cleaned_data.get('re_new_password')
+        if new_password != re_new_password:
+            raise forms.ValidationError('Password is not the same as repeat password ....')
+        elif len(new_password) < 7:
+            raise forms.ValidationError("Password must be longer than 7 characters ...")
+        return new_password
+

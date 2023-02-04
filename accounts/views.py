@@ -2,11 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.views.generic import CreateView, FormView
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 
 from .models import MyUser
 from .forms import FormRegisterUser, LoginForm, ChangePasswordForm
+
+
+def show_first_error(list_error):
+    for field in list_error:
+        if list_error.get(field):
+            return list_error.get(field).as_text()
 
 
 class RegisterUser(CreateView):
@@ -64,16 +71,11 @@ class ChangePassword(FormView):
 
         if form.is_valid():
             data = form.cleaned_data
-            email = data.get('email')
-            new_password, re_new_password = data.get('new_password'), data.get('re_new_password')
-            if MyUser.objects.filter(email=email).exists():
-                user = MyUser.objects.get(email=email)
-                if new_password == re_new_password:
-                    user.set_password(new_password)
-                    user.save()
-                    messages.success(request, 'changed password your account')
-                    return redirect('login')
-                messages.error(request, 'Password is not the same as repeat password')
-                return redirect('change_password')
-            messages.error(request, 'email is incorrect ')
-            return redirect('change_password')
+            new_password, email = data.get('new_password'), data.get('email')
+            user = MyUser.objects.get(email=email)
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'changed password your account')
+            return redirect('login')
+        messages.error(request, show_first_error(form.errors))
+        return redirect('change_password')
