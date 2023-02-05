@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.views.generic import CreateView, FormView
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 
@@ -79,3 +79,12 @@ class ChangePassword(FormView):
             return redirect('login')
         messages.error(request, show_first_error(form.errors))
         return redirect('change_password')
+
+
+class LogoutUser(LoginRequiredMixin, FormView):
+    login_url = '/login/'
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        messages.success(request, 'Logout Successfully !')
+        return redirect('home')
