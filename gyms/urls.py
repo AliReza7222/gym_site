@@ -3,11 +3,12 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import Home
+from .views import Home, About
 
 
 urlpatterns = [
     path('', Home.as_view(), name='home'),
+    path('about/', About.as_view(), name='about'),
 ]
 
 if settings.DEBUG:
