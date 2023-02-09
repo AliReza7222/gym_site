@@ -54,7 +54,7 @@ class Master(models.Model):
         ('F', 'Female')
     ]
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     age = models.PositiveIntegerField()
@@ -164,7 +164,7 @@ class Student(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     ]
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     gender = models.CharField(choices=GENDER_CHOICE, max_length=1)
