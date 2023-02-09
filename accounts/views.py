@@ -82,7 +82,7 @@ class ChangePassword(FormView):
 
 
 class LogoutUser(LoginRequiredMixin, FormView):
-    login_url = '/login/'
+    login_url = 'login'
 
     def get(self, request, *args, **kwargs):
         logout(request)
