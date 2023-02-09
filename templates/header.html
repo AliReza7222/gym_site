@@ -29,6 +29,14 @@
                             </a>
                         </li>
                     {% endif %}
+                    {% if request.user.is_authenticated %}
+                        &emsp;
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Profile
+                            </a>
+                        </li>
+                    {% endif %}
                     &emsp;
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">
