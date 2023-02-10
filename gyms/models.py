@@ -41,7 +41,7 @@ class Locations(models.Model):
     ]
     id = models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4)
     province = models.CharField(max_length=1, choices=PROVINCE_CHOICE)
-    name_city = models.CharField(max_length=100, unique=True)
+    name_city = models.CharField(max_length=100)
 
     def __str__(self):
         address = f'{self.get_province_display()}/{self.name_city}'
