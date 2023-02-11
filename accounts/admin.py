@@ -8,7 +8,7 @@ class AdminPanelMyUser(admin.ModelAdmin):
         'username',
     ]
     fields = [
-        ('username', 'password', 'type_user'),
+        ('username', 'password'),
         'email',
         ('first_name', 'last_name'),
         ('is_active', 'is_staff', 'is_superuser'),
