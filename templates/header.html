@@ -9,7 +9,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav ml-auto">
-                    &emsp;&emsp;
+                    &emsp;
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">
                             Home
@@ -32,7 +32,7 @@
                     {% if request.user.is_authenticated %}
                         &emsp;
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{% url 'profile' %}">
                                 Profile
                             </a>
                         </li>
