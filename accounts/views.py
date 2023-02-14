@@ -13,7 +13,7 @@ from .forms import FormRegisterUser, LoginForm, ChangePasswordForm
 def show_first_error(list_error):
     for field in list_error:
         if list_error.get(field):
-            return list_error.get(field).as_text()
+            return {'field': field, 'text': list_error.get(field).as_text()}
 
 
 class RegisterUser(CreateView):
@@ -55,6 +55,8 @@ class LoginUser(FormView):
                 if check_password(password, password_user):
                     login(request, user)
                     messages.success(request, 'login successfully !')
+                    if request.GET.get('next'):
+                        return redirect(request.GET.get('next'))
                     return redirect('home')
                 messages.error(request, 'The password or email is incorrect ....')
                 return redirect('login')
@@ -77,7 +79,7 @@ class ChangePassword(FormView):
             user.save()
             messages.success(request, 'changed password your account')
             return redirect('login')
-        messages.error(request, show_first_error(form.errors))
+        messages.error(request, show_first_error(form.errors).get('text'))
         return redirect('change_password')
 
 
