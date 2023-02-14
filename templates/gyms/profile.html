@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %} Profile {% endblock %}
+
+{% block link %}
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="{% static 'css/profile.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<form id="regForm" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ wizard.management_form }}
+  <h1>
+      {% if wizard.steps.current == '0' %}
+            Location :
+      {% elif wizard.steps.current == '1' %}
+            Select Type User :
+      {% else %}
+            Complete Your Information :
+      {% endif %}
+  </h1><br>
+
+  <!-- One "tab" for each step in the form: -->
+  <div class="tab">
+    {{ wizard.form }}
+    <div style="overflow:auto;">
+      <div style="text-align:center;margin-top:20px">
+        {% if wizard.steps.prev %}
+          <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous</button>
+          <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">Next</button>
+        {% else %}
+            <button type="submit">Next</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
