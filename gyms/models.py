@@ -1,6 +1,8 @@
 import os.path
 import uuid
 
+from .validations import true_phone_number, check_national_code, get_words
+
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
@@ -57,14 +59,14 @@ class Master(models.Model):
     ]
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, validators=[get_words])
+    last_name = models.CharField(max_length=50, validators=[get_words])
     age = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)])
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     gender = models.CharField(max_length=1, choices=Gender)
-    number_phone = models.CharField(max_length=11)
+    number_phone = models.CharField(max_length=11, validators=[true_phone_number])
     image_profiles = models.ImageField(upload_to='image/')
-    national_code = models.CharField(max_length=11)
+    national_code = models.CharField(max_length=10, validators=[check_national_code])
     credit = models.PositiveIntegerField(default=0, editable=False)
 
     def delete(self, using=None, keep_parents=False):
@@ -168,14 +170,14 @@ class Student(models.Model):
     ]
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, validators=[get_words])
+    last_name = models.CharField(max_length=50, validators=[get_words])
     gender = models.CharField(choices=GENDER_CHOICE, max_length=1)
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)])
     image_person = models.ImageField(upload_to='image/')
-    national_code = models.CharField(max_length=11)
-    number_phone = models.CharField(max_length=11)
+    national_code = models.CharField(max_length=10, validators=[check_national_code])
+    number_phone = models.CharField(max_length=11, validators=[true_phone_number])
     gyms = models.ManyToManyField(Gyms, blank=True)
     credit = models.PositiveIntegerField(default=0, editable=False)
 
