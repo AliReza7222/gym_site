@@ -9,7 +9,7 @@ class AdminPanelMyUser(admin.ModelAdmin):
     ]
     fields = [
         ('username', 'password'),
-        'email',
+        ('email', 'type_user'),
         ('first_name', 'last_name'),
         ('is_active', 'is_staff', 'is_superuser'),
         'groups',
