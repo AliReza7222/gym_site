@@ -5,6 +5,8 @@
 
 {% block link %}
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link href="{% static 'css/profile.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
@@ -21,18 +23,68 @@
             Location :
       {% elif wizard.steps.current == '1' %}
             Select Type User :
-      {% else %}
-            Complete Your Information :
+      {% elif wizard.steps.current == '2' %}
+            Complete Your Information (Master) :
+      {% elif wizard.steps.current == '3' %}
+            Complete Your Information (Student) :
       {% endif %}
   </h1><br>
 
   <!-- One "tab" for each step in the form: -->
   <div class="tab">
-    {{ wizard.form }}
+    {% if wizard.steps.current == '0' %}
+      {{ wizard.form.management_form }}
+        <h6>{{ wizard.form.province.label }} :</h6>
+           {{ wizard.form.province }}
+        <h6>{{ wizard.form.name_city.label }} :</h6>
+           {{ wizard.form.name_city }}
+
+    {% elif wizard.steps.current == '1' %}
+      {{ wizard.form.management_form }}
+        <h6>{{ wizard.form.type_user.label }} :</h6>
+           {{ wizard.form.type_user }}
+
+    {% elif wizard.steps.current == '2' %}
+      {{ wizard.form.management_form }}
+        <h6>{{ wizard.form.first_name.label }} :</h6>
+           {{ wizard.form.first_name }}
+        <h6>{{ wizard.form.last_name.label }} :</h6>
+           {{ wizard.form.last_name }}
+        <h6>{{ wizard.form.gender.label }} :</h6>
+           {{ wizard.form.gender }}
+        <h6>{{ wizard.form.age.label }} :</h6>
+           {{ wizard.form.age }}
+
+        <h6>{{ wizard.form.number_phone.label }}</h6>
+            {{ wizard.form.number_phone }}
+        <h6>{{ wizard.form.national_code.label }}</h6>
+            {{ wizard.form.national_code }}
+        <h6>{{ wizard.form.image_profiles.label }}</h6>
+            {{ wizard.form.image_profiles }}
+
+    {% elif wizard.steps.current == '3' %}
+      {{ wizard.form.management_form }}
+        <h6>{{ wizard.form.first_name.label }} :</h6>
+           {{ wizard.form.first_name }}
+        <h6>{{ wizard.form.last_name.label }} :</h6>
+           {{ wizard.form.last_name }}
+        <h6>{{ wizard.form.gender.label }} :</h6>
+           {{ wizard.form.gender }}
+        <h6>{{ wizard.form.age.label }} :</h6>
+           {{ wizard.form.age }}
+
+        <h6>{{ wizard.form.number_phone.label }}</h6>
+            {{ wizard.form.number_phone }}
+        <h6>{{ wizard.form.national_code.label }}</h6>
+            {{ wizard.form.national_code }}
+        <h6>{{ wizard.form.image_person.label }}</h6>
+            {{ wizard.form.image_person }}
+
+    {% endif %}
     <div style="overflow:auto;">
       <div style="text-align:center;margin-top:20px">
         {% if wizard.steps.prev %}
-          <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous</button>
+          <button name="wizard_goto_step" type="button" value="{{ wizard.steps.prev }}">Previous</button>
           <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">Next</button>
         {% else %}
             <button type="submit">Next</button>
