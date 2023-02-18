@@ -1,6 +1,8 @@
+import os.path
 import uuid
 
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from accounts.models import MyUser
 
@@ -57,11 +59,11 @@ class Master(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    age = models.PositiveIntegerField()
+    age = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)])
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     gender = models.CharField(max_length=1, choices=Gender)
     number_phone = models.CharField(max_length=11)
-    image_profiles = models.ImageField(upload_to='image_master/')
+    image_profiles = models.ImageField(upload_to='image/')
     national_code = models.CharField(max_length=11)
     credit = models.PositiveIntegerField(default=0, editable=False)
 
@@ -81,13 +83,13 @@ class Gyms(models.Model):
         ('fm', "Female & Male")
     ]
     DAYS_CHOICE = [
-        ("S", "Saturday"),
-        ("S", "Sunday"),
-        ("M", "Monday"),
-        ("T", "Tuesday"),
-        ("W", "Wednesday"),
-        ("T", "Thursday"),
-        ("F", "Friday"),
+        ("1", "Saturday"),
+        ("2", "Sunday"),
+        ("3", "Monday"),
+        ("4", "Tuesday"),
+        ("5", "Wednesday"),
+        ("6", "Thursday"),
+        ("7", "Friday"),
     ]
     FIELD_SPORTS_CHOICE = [
         (1, 'Football'),
@@ -164,13 +166,14 @@ class Student(models.Model):
         ('M', 'Male'),
         ('F', 'Female')
     ]
+    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     gender = models.CharField(choices=GENDER_CHOICE, max_length=1)
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
-    age = models.PositiveIntegerField()
-    image_person = models.ImageField(upload_to='image_student/')
+    age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)])
+    image_person = models.ImageField(upload_to='image/')
     national_code = models.CharField(max_length=11)
     number_phone = models.CharField(max_length=11)
     gyms = models.ManyToManyField(Gyms, blank=True)
