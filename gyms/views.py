@@ -3,6 +3,7 @@ import sys
 
 from accounts.views import show_first_error
 from .models import Locations, Master, Student
+from .mixins import CheckCompleteProfileMixin
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
                     ChoiceTypeUser, FormStudentStepThree, FormGymsStepFour, ManagementForm)
 
@@ -13,7 +14,7 @@ from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 
 
 class Home(TemplateView):
@@ -24,7 +25,7 @@ class About(TemplateView):
     template_name = 'gyms/about.html'
 
 
-class ProfileUser(LoginRequiredMixin, SessionWizardView):
+class ProfileUser(LoginRequiredMixin, CheckCompleteProfileMixin, SessionWizardView):
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'image'))
     login_url = 'login'
     template_name = 'gyms/profile.html'
@@ -142,4 +143,8 @@ class ProfileUser(LoginRequiredMixin, SessionWizardView):
 
         messages.success(self.request, 'Create Your Profile .')
         return redirect('home')
+
+
+class ShowProfile(LoginRequiredMixin, CheckCompleteProfileMixin, DetailView):
+    login_url = 'login'
 
