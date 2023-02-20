@@ -84,7 +84,7 @@
     <div style="overflow:auto;">
       <div style="text-align:center;margin-top:20px">
         {% if wizard.steps.prev %}
-          <button name="wizard_goto_step" type="button" value="{{ wizard.steps.prev }}">Previous</button>
+          <button formnovalidate="formnovalidate" name="wizard_goto_step" value="{{ wizard.steps.prev }}">Previous</button>
           <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">Next</button>
         {% else %}
             <button type="submit">Next</button>
