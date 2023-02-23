@@ -2,8 +2,8 @@ import os.path
 import sys
 
 from accounts.views import show_first_error
-from .models import Locations, Master, Student
-from .mixins import CheckCompleteProfileMixin
+from .models import Locations, Master, Student, MyUser
+from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
                     ChoiceTypeUser, FormStudentStepThree, FormGymsStepFour, ManagementForm)
 
@@ -145,6 +145,7 @@ class ProfileUser(LoginRequiredMixin, CheckCompleteProfileMixin, SessionWizardVi
         return redirect('home')
 
 
-class ShowProfile(LoginRequiredMixin, CheckCompleteProfileMixin, DetailView):
+class ShowProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, DetailView):
+    model = MyUser
     login_url = 'login'
-
+    template_name = 'gyms/detail_profile.html'

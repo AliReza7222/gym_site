@@ -8,6 +8,18 @@ class CheckCompleteProfileMixin:
 
     def dispatch(self, request, *args, **kwargs):
         user = request.user
+        if user.type_user:
+            print('show_profile')
+            return redirect('show_profile', pk=user.pk)
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class CheckNotCompleteProfileMixin:
+
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
         if not user.type_user:
-            return super().dispatch(request, *args, **kwargs)
-        return redirect('show_profile')
+            return redirect('profile')
+
+        return super().dispatch(request, *args, **kwargs)
