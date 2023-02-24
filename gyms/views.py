@@ -149,3 +149,23 @@ class ShowProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, DetailView):
     model = MyUser
     login_url = 'login'
     template_name = 'gyms/detail_profile.html'
+
+    def get_context_data(self, **kwargs):
+        """Insert the single object into the context dict."""
+        context = {}
+        user = self.request.user
+        # check in user have master or have student
+        master, student = Master.objects.filter(user=user), Student.objects.filter(user=user)
+        if self.object:
+            context["object"] = self.object
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+        if master:
+            context['info_prof'] = master[0]
+            context['type_user'] = 'Master'
+        elif student:
+            context['info_prof'] = student[0]
+            context['type_user'] = 'Student'
+        context.update(kwargs)
+        return super().get_context_data(**context)
