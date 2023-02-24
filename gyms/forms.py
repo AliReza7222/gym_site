@@ -38,7 +38,7 @@ class FormMasterStepTwo(forms.ModelForm):
             'gender',
             'number_phone',
             'national_code',
-            'image_profiles'
+            'image_person'
         ]
         widgets = {
             'number_phone': forms.TextInput(attrs={'placeholder': 'start number with 09 for ex: 09358891234'}),

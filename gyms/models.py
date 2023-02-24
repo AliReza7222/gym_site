@@ -65,12 +65,12 @@ class Master(models.Model):
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     gender = models.CharField(max_length=1, choices=Gender)
     number_phone = models.CharField(max_length=11, validators=[true_phone_number])
-    image_profiles = models.ImageField(upload_to='image/')
+    image_person = models.ImageField(upload_to='image/')
     national_code = models.CharField(max_length=10, validators=[check_national_code])
     credit = models.PositiveIntegerField(default=0, editable=False)
 
     def delete(self, using=None, keep_parents=False):
-        self.image_profiles.storage.delete(str(self.image_profiles.name))
+        self.image_person.storage.delete(str(self.image_person.name))
         super().delete()
 
     def __str__(self):
