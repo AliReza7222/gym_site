@@ -30,7 +30,11 @@
                                     <h6>
                                         {{ type_user }}
                                     </h6>
-<!--                                    <p class="proile-rating">RANKINGS : <span>8/10</span></p>-->
+                                    {% if type_user == 'Master' %}
+                                        <p class="proile-rating">SALARY : <span>{{ info_prof.salary }}</span></p>
+                                    {% elif type_user == 'Student' %}
+                                        <p class="proile-rating">CREDIT : <span>{{ info_prof.credit }}</span></p>
+                                    {% endif %}
                             <br>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
