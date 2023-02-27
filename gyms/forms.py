@@ -36,13 +36,14 @@ class FormMasterStepTwo(forms.ModelForm):
             'last_name',
             'age',
             'gender',
+            'profession',
             'number_phone',
             'national_code',
             'image_person'
         ]
         widgets = {
             'number_phone': forms.TextInput(attrs={'placeholder': 'start number with 09 for ex: 09358891234'}),
-            'national_code': forms.TextInput(attrs={'placeholder': 'enter a national code contain numbers '})
+            'national_code': forms.TextInput(attrs={'placeholder': 'enter a national code contain numbers '}),
         }
 
 

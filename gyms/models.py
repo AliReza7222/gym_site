@@ -5,8 +5,39 @@ from .validations import true_phone_number, check_national_code, get_words
 
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from multiselectfield import MultiSelectField
 from django.core.exceptions import ValidationError
 from accounts.models import MyUser
+
+
+FIELD_SPORTS_CHOICE = [
+    (1, 'Football'),
+    (2, 'Volleyball'),
+    (3, 'Swim'),
+    (4, 'Basketball'),
+    (5, 'Tennis'),
+    (6, 'Table Tennis'),
+    (7, 'Baseball'),
+    (8, 'Golf'),
+    (9, 'Wrestling'),
+    (10, "Bodybuilding"),
+    (11, "Boxing"),
+    (12, "Kung Fu"),
+    (13, "Karate"),
+    (14, "MMA"),
+    (15, "shooting"),
+    (16, "Jujitsu"),
+    (17, "taekwondo"),
+    (18, "water polo"),
+    (19, "Running"),
+    (20, "Mountaineering"),
+    (21, "Field hockey"),
+    (22, "bowling"),
+    (23, "handball"),
+    (24, "American football"),
+    (25, "futsal"),
+
+]
 
 
 class Locations(models.Model):
@@ -67,7 +98,8 @@ class Master(models.Model):
     number_phone = models.CharField(max_length=11, validators=[true_phone_number])
     image_person = models.ImageField(upload_to='image/')
     national_code = models.CharField(max_length=10, validators=[check_national_code])
-    credit = models.PositiveIntegerField(default=0, editable=False)
+    salary = models.PositiveIntegerField(default=0, editable=False)
+    profession = MultiSelectField(choices=FIELD_SPORTS_CHOICE, max_choices=100, max_length=100)
 
     def delete(self, using=None, keep_parents=False):
         self.image_person.storage.delete(str(self.image_person.name))
@@ -92,34 +124,6 @@ class Gyms(models.Model):
         ("5", "Wednesday"),
         ("6", "Thursday"),
         ("7", "Friday"),
-    ]
-    FIELD_SPORTS_CHOICE = [
-        (1, 'Football'),
-        (2, 'Volleyball'),
-        (3, 'Swim'),
-        (4, 'Basketball'),
-        (5, 'Tennis'),
-        (6, 'Table Tennis'),
-        (7, 'Baseball'),
-        (8, 'Golf'),
-        (9, 'Wrestling'),
-        (10, "Bodybuilding"),
-        (11, "Boxing"),
-        (12, "Kung Fu"),
-        (13, "Karate"),
-        (14, "MMA"),
-        (15, "shooting"),
-        (16, "Jujitsu"),
-        (17, "taekwondo"),
-        (18, "water polo"),
-        (19, "Running"),
-        (20, "Mountaineering"),
-        (21, "Field hockey"),
-        (22, "bowling"),
-        (23, "handball"),
-        (24, "American football"),
-        (25, "futsal"),
-
     ]
     STATE_GYM = [
         (1, 'have capacity'),

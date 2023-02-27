@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'gyms',
     'formtools',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
