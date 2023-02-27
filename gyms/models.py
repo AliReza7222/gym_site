@@ -134,7 +134,7 @@ class Gyms(models.Model):
     gender = models.CharField(max_length=2, choices=GENDER_CHOICE)
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     field_sport_gym = models.IntegerField(choices=FIELD_SPORTS_CHOICE)
-    days_work = models.CharField(max_length=100, choices=DAYS_CHOICE)
+    days_work = MultiSelectField(choices=DAYS_CHOICE, max_choices=100, max_length=100)
     time_start_working = models.TimeField(unique=True)
     time_end_working = models.TimeField(unique=True)
     capacity_gym = models.PositiveIntegerField()
@@ -183,6 +183,7 @@ class Student(models.Model):
     national_code = models.CharField(max_length=10, validators=[check_national_code])
     number_phone = models.CharField(max_length=11, validators=[true_phone_number])
     gyms = models.ManyToManyField(Gyms, blank=True)
+    favorite_sport = MultiSelectField(choices=FIELD_SPORTS_CHOICE, max_choices=100, max_length=100)
     credit = models.PositiveIntegerField(default=0, editable=False)
 
     def delete(self, using=None, keep_parents=False):

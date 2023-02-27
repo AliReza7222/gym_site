@@ -55,9 +55,10 @@ class FormStudentStepThree(forms.ModelForm):
             "last_name",
             "gender",
             "age",
-            "image_person",
             "national_code",
             "number_phone",
+            'favorite_sport',
+            "image_person",
         ]
         widgets = {
             'number_phone': forms.TextInput(attrs={'placeholder': 'start number with 09 for ex: 09358891234'}),

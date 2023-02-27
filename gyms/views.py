@@ -162,9 +162,11 @@ class ShowProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, DetailView):
             if context_object_name:
                 context[context_object_name] = self.object
         if master:
+            context['professions'] = [master[0].profession.choices.get(int(index)) for index in master[0].profession]
             context['info_prof'] = master[0]
             context['type_user'] = 'Master'
         elif student:
+            context['favorite_sport'] = [student[0].favorite_sport.choices.get(int(index)) for index in student[0].favorite_sport]
             context['info_prof'] = student[0]
             context['type_user'] = 'Student'
         context.update(kwargs)

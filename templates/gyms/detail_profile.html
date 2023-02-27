@@ -53,16 +53,20 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-work">
-                            <p>WORK LINK</p>
-                            <a href="">Website Link</a><br/>
-                            <a href="">Bootsnipp Profile</a><br/>
-                            <a href="">Bootply Profile</a>
-                            <p>SKILLS</p>
-                            <a href="">Web Designer</a><br/>
-                            <a href="">Web Developer</a><br/>
-                            <a href="">WordPress</a><br/>
-                            <a href="">WooCommerce</a><br/>
-                            <a href="">PHP, .Net</a><br/>
+                            {% if type_user == 'Master' %}
+                                <p>PROFESSIONS</p>
+                                {% for profession in professions %}
+                                    <a href="">{{ profession }}</a><br/>
+                                {% endfor %}
+                            <hr>
+                            {% endif %}
+                            {% if type_user == 'Student' %}
+                                <p>FAVORITE SPORT</p>
+                                {% for sport in favorite_sport %}
+                                    <a href="">{{ sport }}</a><br/>
+                                {% endfor %}
+                            <hr>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -94,6 +98,14 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
+                                                <label>Locations</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ info_prof.location }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
                                                 <label>Phone Number</label>
                                             </div>
                                             <div class="col-md-6">
@@ -116,14 +128,6 @@
                                                 <p>{{ info_prof.get_gender_display }}</p>
                                             </div>
                                         </div>
-<!--                                        <div class="row">-->
-<!--                                            <div class="col-md-6">-->
-<!--                                                <label>Profession</label>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-md-6">-->
-<!--                                                <p>Web Developer and Designer</p>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>National Code</label>

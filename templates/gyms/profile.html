@@ -96,6 +96,13 @@
             {{ wizard.form.number_phone }}
         <h6>{{ wizard.form.national_code.label }}</h6>
             {{ wizard.form.national_code }}
+        <h6>{{ wizard.form.favorite_sport.label }} :</h6>
+            <select name="3-favorite_sport" id="3-favorite_sport" multiple onchange="console.log(Array.from(this.selectedOptions).map(x=>x.value??x.text))" multiselect-hide-x="true">
+              {% for value, text in form.favorite_sport.field.choices %}
+                            <option value="{{ value }}">{{ text }}</option>
+              {% endfor %}
+            </select>
+
         <h6>{{ wizard.form.image_person.label }}</h6>
             {{ wizard.form.image_person }}
 
