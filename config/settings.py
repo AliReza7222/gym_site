@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'gyms',
     'formtools',
     'multiselectfield',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
