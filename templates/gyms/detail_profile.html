@@ -15,7 +15,8 @@
 
 {% block content %}
     <div class="container emp-profile">
-            <form>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
@@ -47,7 +48,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                        <a href="{% url 'update_profile' user.pk %}" class="profile-edit-btn" >Edit Profile</a>
                     </div>
                 </div>
                 <div class="row">

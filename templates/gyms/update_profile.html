@@ -1,0 +1,123 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %} Update Profile {% endblock %}
+
+{% block link %}
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="{% static 'css/profile.css' %}" type="text/css" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+           integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/profile.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'js/multiselect-dropdown.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1>
+      {% if request.user.type_user == 'M' %}
+            Update Your Information (Master) :
+      {% elif request.user.type_user == 'S' %}
+            Update Your Information (Student) :
+      {% endif %}
+  </h1><br>
+    {% if request.user.type_user == 'M' %}
+        <h6>{{ form.first_name.label }} :</h6>
+           {{ form.first_name }}
+
+        <h6>{{ form.last_name.label }} :</h6>
+           {{ form.last_name }}
+
+        <h6>{{ form.gender.label }} :</h6>
+           {{ form.gender }}
+
+        <h6>{{ location.province.label }} :</h6>
+           {{ location.province }}
+        <h6>{{ location.name_city.label }} :</h6>
+           {{ location.name_city }}
+
+        <h6>{{ form.age.label }} :</h6>
+           {{ form.age }}
+
+        <h6>{{ form.profession.label }} :</h6>
+            <select name="profession" id="profession"
+                    multiple onchange="console.log(Array.from(this.selectedOptions).map(x=>x.value??x.text))"
+                    multiselect-hide-x="true">
+              {% for value, text in form.profession.field.choices %}
+                    {% if value in profession %}
+                            <option value="{{ value }}" selected>{{ text }}</option>
+                    {% endif %}
+                    <option value="{{ value }}">{{ text }}</option>
+              {% endfor %}
+            </select>
+
+        <h6>{{ form.number_phone.label }} : </h6>
+            {{ form.number_phone }}
+
+        <h6>{{ form.national_code.label }} :</h6>
+            {{ form.national_code }}
+
+        <h6>Change {{ form.image_person.label }} : </h6>
+            <img src="{{ user.master.image_person.url }}" class="w3-round-xxlarge" style="width:7%">
+            {{ form.image_person }}
+            <br>
+
+
+    {% elif request.user.type_user == 'S' %}
+           <h6>{{ form.first_name.label }} :</h6>
+           {{ form.first_name }}
+
+        <h6>{{ form.last_name.label }} :</h6>
+           {{ form.last_name }}
+
+        <h6>{{ form.gender.label }} :</h6>
+           {{ form.gender }}
+
+        <h6>{{ location.province.label }} :</h6>
+           {{ location.province }}
+        <h6>{{ location.name_city.label }} :</h6>
+           {{ location.name_city }}
+
+        <h6>{{ form.age.label }} :</h6>
+           {{ form.age }}
+
+        <h6>{{ form.favorite_sport.label }} :</h6>
+            <select name="favorite_sport" id="favorite_sport"
+                    multiple onchange="console.log(Array.from(this.selectedOptions).map(x=>x.value??x.text))"
+                    multiselect-hide-x="true">
+              {% for value, text in form.favorite_sport.field.choices %}
+                    {% if value in favorite_sport %}
+                            <option value="{{ value }}" selected>{{ text }}</option>
+                    {% endif %}
+                    <option value="{{ value }}">{{ text }}</option>
+              {% endfor %}
+            </select>
+
+        <h6>{{ form.number_phone.label }} : </h6>
+            {{ form.number_phone }}
+
+        <h6>{{ form.national_code.label }} :</h6>
+            {{ form.national_code }}
+
+        <h6>Change {{ form.image_person.label }} : </h6>
+            <img src="{{ user.student.image_person.url }}" class="w3-round-xxlarge" style="width:7%">
+            {{ form.image_person }}
+            <br>
+
+    {% endif %}
+    <br>
+    <button type="submit" class="btn btn-primary" style="width:100%">Update</button><br>
+    <br>
+</form>
+{% endblock %}
