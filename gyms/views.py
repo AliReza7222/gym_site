@@ -1,5 +1,4 @@
 import os.path
-import sys
 
 from accounts.views import show_first_error
 from .models import Locations, Master, Student, MyUser
@@ -14,7 +13,8 @@ from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, FormView
+from django.views.generic.edit import UpdateView
 
 
 class Home(TemplateView):
@@ -171,3 +171,74 @@ class ShowProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, DetailView):
             context['type_user'] = 'Student'
         context.update(kwargs)
         return super().get_context_data(**context)
+
+
+class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView):
+    model = MyUser
+    login_url = 'login'
+    template_name = 'gyms/update_profile.html'
+
+    def get_form(self, form_class=None):
+        user = self.request.user
+        if user.type_user == 'M':
+            master_data = Master.objects.filter(user=user).values()[0]
+            obj_form = FormMasterStepTwo(initial=master_data)
+            return obj_form
+        elif user.type_user == 'S':
+            student_data = Student.objects.filter(user=user).values()[0]
+            obj_form_student = FormStudentStepThree(initial=student_data)
+            return obj_form_student
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        if "form" not in kwargs:
+            kwargs["form"] = self.get_form()
+        if user.type_user == 'M':
+            data_location = {'name_city': user.master.location.name_city, 'province': user.master.location.province}
+            obj_form_location = FormLocationStepOne(initial=data_location)
+            kwargs['location'] = obj_form_location
+            kwargs['profession'] = [int(num_sport) for num_sport in user.master.profession]
+        elif user.type_user == 'S':
+            data_location = {'name_city': user.student.location.name_city, 'province': user.student.location.province}
+            obj_form_location = FormLocationStepOne(initial=data_location)
+            kwargs['location'] = obj_form_location
+            kwargs['favorite_sport'] = [int(num_sport) for num_sport in user.student.favorite_sport]
+        return super().get_context_data(**kwargs)
+
+    def post(self, request, *args, **kwargs):
+        user, form = request.user, None
+        data = request.POST.copy()
+        data_location = {'province': data.get('province'), 'name_city': data.get('name_city')}
+        data_files = request.FILES.copy()
+        if user.type_user == 'M':
+            data['image_person'] = user.master.image_person
+            # data files
+            if not data_files:
+                data_files['image_person'] = user.master.image_person
+            # object form master
+            form = FormMasterStepTwo(data, data_files)
+            # update my object profile master
+            if form.is_valid():
+                data_master = form.cleaned_data
+                Locations.objects.update_or_create(id=user.master.location.id, defaults=data_location)
+                Master.objects.update_or_create(id=user.master.id, defaults=data_master)
+                messages.success(request, 'your profile updated .')
+                return redirect('profile')
+        elif user.type_user == 'S':
+            # data files
+            if not data_files:
+                data_files['image_person'] = user.student.image_person
+            # object form student
+            form = FormStudentStepThree(data, data_files)
+            # update my object profile student
+            if form.is_valid():
+                data_student = form.cleaned_data
+                Locations.objects.update_or_create(id=user.student.location.id, defaults=data_location)
+                Student.objects.update_or_create(id=user.student.id, defaults=data_student)
+                messages.success(request, 'your profile updated .')
+                return redirect('profile')
+        # error form if exists
+        if form.errors:
+            error_message = show_first_error(form.errors)
+            messages.error(request, f"{error_message.get('field')}:  {error_message.get('text').lstrip('*')}")
+            return redirect('update_profile', pk=self.request.user.pk)
