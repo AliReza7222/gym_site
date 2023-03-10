@@ -39,6 +39,12 @@
         <h6>{{ form.last_name.label }} :</h6>
            {{ form.last_name }}
 
+        <h6>{{ form_user.email.label }} :</h6>
+           {{ form_user.email }}
+
+        <h6>{{ form_user.username.label }} :</h6>
+           {{ form_user.username }}
+
         <h6>{{ form.gender.label }} :</h6>
            {{ form.gender }}
 
@@ -73,13 +79,18 @@
             {{ form.image_person }}
             <br>
 
-
     {% elif request.user.type_user == 'S' %}
            <h6>{{ form.first_name.label }} :</h6>
            {{ form.first_name }}
 
         <h6>{{ form.last_name.label }} :</h6>
            {{ form.last_name }}
+
+        <h6>{{ form_user.email.label }} :</h6>
+           {{ form_user.email }}
+
+        <h6>{{ form_user.username.label }} :</h6>
+           {{ form_user.username }}
 
         <h6>{{ form.gender.label }} :</h6>
            {{ form.gender }}
@@ -114,7 +125,6 @@
             <img src="{{ user.student.image_person.url }}" class="w3-round-xxlarge" style="width:7%">
             {{ form.image_person }}
             <br>
-
     {% endif %}
     <br>
     <button type="submit" class="btn btn-primary" style="width:100%">Update</button><br>

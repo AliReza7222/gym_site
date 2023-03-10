@@ -1,6 +1,7 @@
 import os.path
 
 from accounts.views import show_first_error
+from accounts.forms import FormRegisterUser
 from .models import Locations, Master, Student, MyUser
 from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
@@ -191,6 +192,9 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
 
     def get_context_data(self, **kwargs):
         user = self.request.user
+        obj_form_user = FormRegisterUser(initial={'email': user.email, 'username': user.username})
+        kwargs['form_user'] = obj_form_user
+
         if "form" not in kwargs:
             kwargs["form"] = self.get_form()
         if user.type_user == 'M':
@@ -209,6 +213,14 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
         user, form = request.user, None
         data = request.POST.copy()
         data_location = {'province': data.get('province'), 'name_city': data.get('name_city')}
+        # check data user !
+        if MyUser.objects.filter(email=data.get('email')).exists() and user.email != data.get('email'):
+            messages.error(request, 'This email exists !')
+            return redirect('update_profile', pk=self.request.user.pk)
+        elif MyUser.objects.filter(username=data.get('username')).exists() and user.username != data.get('username'):
+            messages.error(request, 'This username exists !')
+            return redirect('update_profile', pk=self.request.user.pk)
+        data_user = {'email': data.get('email'), 'username': data.get('username')}
         data_files = request.FILES.copy()
         if user.type_user == 'M':
             data['image_person'] = user.master.image_person
@@ -220,6 +232,7 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
             # update my object profile master
             if form.is_valid():
                 data_master = form.cleaned_data
+                MyUser.objects.filter(id=user.id).update(**data_user)
                 Locations.objects.update_or_create(id=user.master.location.id, defaults=data_location)
                 Master.objects.update_or_create(id=user.master.id, defaults=data_master)
                 messages.success(request, 'your profile updated .')
@@ -233,6 +246,7 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
             # update my object profile student
             if form.is_valid():
                 data_student = form.cleaned_data
+                MyUser.objects.filter(id=user.id).update(**data_user)
                 Locations.objects.update_or_create(id=user.student.location.id, defaults=data_location)
                 Student.objects.update_or_create(id=user.student.id, defaults=data_student)
                 messages.success(request, 'your profile updated .')
