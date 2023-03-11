@@ -93,3 +93,14 @@ body{
     font-weight: 600;
     color: #0062cc;
 }
+
+.fancy-link {
+  text-decoration: none;
+  color: #0062cc;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+
+.fancy-link:hover {
+  color: #00A5E2;
+}

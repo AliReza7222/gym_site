@@ -258,3 +258,5 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
             error_message = show_first_error(form.errors)
             messages.error(request, f"{error_message.get('field')}:  {error_message.get('text').lstrip('*')}")
             return redirect('update_profile', pk=self.request.user.pk)
+
+
