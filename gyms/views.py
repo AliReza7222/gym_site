@@ -212,7 +212,7 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
     def post(self, request, *args, **kwargs):
         user, form = request.user, None
         data = request.POST.copy()
-        data_location = {'province': data.get('province'), 'name_city': data.get('name_city')}
+        data_location = {'province': data.get('province'), 'name_city': data.get('name_city').title()}
         # check data user !
         if MyUser.objects.filter(email=data.get('email')).exists() and user.email != data.get('email'):
             messages.error(request, 'This email exists !')
@@ -233,7 +233,8 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
             if form.is_valid():
                 data_master = form.cleaned_data
                 MyUser.objects.filter(id=user.id).update(**data_user)
-                Locations.objects.update_or_create(id=user.master.location.id, defaults=data_location)
+                obj_loc, created = Locations.objects.get_or_create(**data_location)
+                data_master['location'] = obj_loc
                 Master.objects.update_or_create(id=user.master.id, defaults=data_master)
                 messages.success(request, 'your profile updated .')
                 return redirect('profile')
@@ -247,7 +248,8 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
             if form.is_valid():
                 data_student = form.cleaned_data
                 MyUser.objects.filter(id=user.id).update(**data_user)
-                Locations.objects.update_or_create(id=user.student.location.id, defaults=data_location)
+                obj_loc, created = Locations.objects.get_or_create(**data_location)
+                data_student['location'] = obj_loc
                 Student.objects.update_or_create(id=user.student.id, defaults=data_student)
                 messages.success(request, 'your profile updated .')
                 return redirect('profile')
