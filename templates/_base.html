@@ -23,10 +23,19 @@
     {% if messages %}
         {% for message in messages %}
              {% if message.tags %}
-                  <div class="{{ message.tags }}">
-                      <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
-                        {{ message }}
-                  </div>
+                  {% if message.tags == 'success' %}
+                        <div class="text-center">
+                          <div class="alert alert-success" role="alert">
+                              <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
+                                {{ message }}
+                          </div>
+                        </div>
+                  {% elif message.tags == 'error' %}
+                          <div class="alert alert-danger" role="alert">
+                              <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
+                                {{ message }}
+                          </div>
+                  {% endif %}
              {% endif %}
         {% endfor %}
     {% endif %}
