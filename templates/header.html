@@ -29,6 +29,7 @@
                             </a>
                         </li>
                     {% endif %}
+
                     {% if request.user.is_authenticated %}
                         &emsp;
                         <li class="nav-item">
@@ -36,13 +37,22 @@
                                 Profile
                             </a>
                         </li>
+                         &emsp;
+                        {% if request.user.type_user == 'M' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    CreateGym
+                                </a>
+                            </li>
+                        {% elif request.user.type_user == 'S' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    MyGym
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endif %}
-                    &emsp;
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' %}">
-                            About Us
-                        </a>
-                    </li>
+                   
                     {% if request.user.is_authenticated %}
                          &emsp;
                         <li class="nav-item">
