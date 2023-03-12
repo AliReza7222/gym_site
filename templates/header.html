@@ -1,5 +1,5 @@
-<header style="position: sticky; top: 0;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-center"
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-center "
          style="width: 100%">
         <div>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -9,12 +9,28 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav ml-auto">
+                    {% if request.user.is_authenticated %}
+                        &emsp;
+                        <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}"
+                                   style="color:#0EDEDB;background:black;border-radius: 10%;">
+                                    {{ request.user }}
+                                </a>
+                        </li>
+                        <div class="vertical-line" style="height: 40px;width: 2px;background-color: gray;margin: 0 20px;"></div>
+                    {% endif %}
                     &emsp;
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">
                             Home
                         </a>
                     </li>
+                    &emsp;
+                     <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    Gyms
+                                </a>
+                     </li>
                     {% if not request.user.is_authenticated %}
                         &emsp;
                         <li class="nav-item">
@@ -37,10 +53,10 @@
                                 Profile
                             </a>
                         </li>
-                         &emsp;
                         {% if request.user.type_user == 'M' %}
+                            &emsp;
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{% url 'create_gym' %}">
                                     CreateGym
                                 </a>
                             </li>
@@ -52,18 +68,12 @@
                             </li>
                         {% endif %}
                     {% endif %}
-                   
+
                     {% if request.user.is_authenticated %}
                          &emsp;
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">
                                 Logout
-                            </a>
-                        </li>
-                        <li style="margin-left: 900px;" class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}"
-                               style="color:#0EDEDB;background:black;border-radius: 50%;">
-                                {{ request.user }}
                             </a>
                         </li>
 
