@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'gyms',
     'formtools',
     'multiselectfield',
+    'bootstrap4',
     'django_cleanup.apps.CleanupConfig',
 ]
 
