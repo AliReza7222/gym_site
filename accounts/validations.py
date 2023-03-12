@@ -1,5 +1,6 @@
 import re
-from django.core.validators import ValidationError
+from django.core.validators import ValidationError, RegexValidator
+from django.utils.deconstruct import deconstructible
 
 
 def check_password(value):
@@ -10,3 +11,14 @@ def check_password(value):
         if get_password[0] != value:
             raise ValidationError("password must contain words and numbers ...")
     return value
+
+
+@deconstructible
+class UnicodeUsernameValidator(RegexValidator):
+    regex = r"^[\w.@+-]+\Z"
+    message = (
+        "Enter a valid username. This value may contain only letters, "
+        "numbers, and @/./+/-/_ characters."
+    )
+    flags = 0
+
