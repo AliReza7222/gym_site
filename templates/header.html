@@ -1,24 +1,14 @@
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-center "
-         style="width: 100%">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark "
+         style="width: 100%;position: relative;">
         <div>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarText" aria-controls="navbarText"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarText">
+            <div class="collapse navbar-collapse " id="navbarText">
                 <ul class="navbar-nav ml-auto">
-                    {% if request.user.is_authenticated %}
-                        &emsp;
-                        <li class="nav-item">
-                                <a class="nav-link" href="{% url 'home' %}"
-                                   style="color:#0EDEDB;background:black;border-radius: 10%;">
-                                    {{ request.user }}
-                                </a>
-                        </li>
-                        <div class="vertical-line" style="height: 40px;width: 2px;background-color: gray;margin: 0 20px;"></div>
-                    {% endif %}
                     &emsp;
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">
@@ -79,6 +69,15 @@
 
                     {% endif %}
                 </ul>
+                {% if request.user.is_authenticated %}
+                        &emsp;
+                        <div style="position: absolute;top: 10;right: 25px">
+                            <a class="nav-link" href="{% url 'home' %}"
+                               style="color:#0EDEDB;background:black;border-radius: 60%;">
+                               {{ request.user }}
+                            </a>
+                        </div>
+                    {% endif %}
             </div>
         </div>
     </nav>
