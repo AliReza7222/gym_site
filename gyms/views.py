@@ -2,10 +2,10 @@ import os.path
 
 from accounts.views import show_first_error
 from accounts.forms import FormRegisterUser
-from .models import Locations, Master, Student, MyUser
-from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin
+from .models import Locations, Master, Student, MyUser, Gyms
+from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
-                    ChoiceTypeUser, FormStudentStepThree, FormGymsStepFour, ManagementForm)
+                    ChoiceTypeUser, FormStudentStepThree, FormGyms, ManagementForm)
 
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
@@ -14,7 +14,7 @@ from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView, DetailView, FormView
+from django.views.generic import TemplateView, DetailView, FormView, CreateView
 from django.views.generic.edit import UpdateView
 
 
@@ -260,3 +260,23 @@ class UpdateProfile(LoginRequiredMixin, CheckNotCompleteProfileMixin, UpdateView
             return redirect('update_profile', pk=self.request.user.pk)
 
 
+class CreateGym(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
+    model = Gyms
+    login_url = 'login'
+    form_class = FormGyms
+    template_name = 'gyms/create_gym.html'
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        data = request.POST.copy()
+        form = FormGyms(data)
+        if form.is_valid():
+            data_confirm = form.cleaned_data
+            data_confirm['master'] = user.master
+            Gyms.objects.create(**data_confirm)
+            message = 'Gym Successfully Created !'
+            messages.success(request, message)
+            return redirect('create_gym')
+        message = show_first_error(form.errors)
+        messages.error(request, f'{message.get("field")} : {message.get("text").lstrip("*")}')
+        return redirect('create_gym')

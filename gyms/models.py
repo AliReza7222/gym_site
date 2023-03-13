@@ -130,7 +130,7 @@ class Gyms(models.Model):
         (2, "full capacity")
     ]
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, validators=[get_words])
     gender = models.CharField(max_length=2, choices=GENDER_CHOICE)
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     field_sport_gym = models.IntegerField(choices=FIELD_SPORTS_CHOICE)
