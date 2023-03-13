@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.views.generic import CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 
@@ -87,6 +88,9 @@ class LogoutUser(LoginRequiredMixin, FormView):
     login_url = 'login'
 
     def get(self, request, *args, **kwargs):
-        logout(request)
-        messages.success(request, 'Logout Successfully !')
-        return redirect('home')
+        confirm_logout = request.GET.get('result') or False
+        if confirm_logout == 'true':
+            logout(request)
+            messages.success(request, 'Logout Successfully !')
+            return redirect('home')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])

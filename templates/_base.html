@@ -12,6 +12,7 @@
     <link href='https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css' rel='stylesheet'
           type='text/css'>
     <link href="{% static 'css/messages.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/header.css' %}" type="text/css" rel="stylesheet">
 </head>
 <body>
     <!-- header -->
@@ -45,7 +46,8 @@
         {% block content %}
         {% endblock %}
     </div>
-    <!-- footer -->
 {% block script %}{% endblock %}
+<script src="{% static 'js/logout.js' %}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>
