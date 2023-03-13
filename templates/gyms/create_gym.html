@@ -68,7 +68,7 @@
             </div>
             <div class="col-md-6">
                 <p>Location</p>
-                 <select class="js-select2" >
+                 <select class="js-select2" name="location" id="location">
                         {% for value, text in form.location.field.choices %}
                                 <option value="{{ value }}">{{ text }}</option>
                         {% endfor %}
