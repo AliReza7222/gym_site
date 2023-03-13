@@ -66,22 +66,27 @@ class FormStudentStepThree(forms.ModelForm):
         }
 
 
-class FormGymsStepFour(forms.ModelForm):
-    model = Gyms
-    fields = [
-        'name',
-        'gender',
-        'location',
-        'field_sport_gym',
-        'days_work',
-        'time_start_working',
-        'time_end_working',
-        'capacity_gym',
-        'state',
-        'master',
-        'monthly_tuition',
-        'address_exact',
-    ]
+class FormGyms(forms.ModelForm):
+
+    class Meta:
+        model = Gyms
+        fields = [
+            'name',
+            'gender',
+            'location',
+            'field_sport_gym',
+            'days_work',
+            'time_start_working',
+            'time_end_working',
+            'capacity_gym',
+            'state',
+            'monthly_tuition',
+            'address_exact',
+        ]
+        widgets = {
+            'time_start_working': forms.DateTimeInput(attrs={'type': 'time'}),
+            'time_end_working': forms.DateTimeInput(attrs={'type': 'time'}),
+        }
 
 
 class ManagementForm(forms.Form):
