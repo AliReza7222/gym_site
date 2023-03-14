@@ -33,7 +33,8 @@ class RegisterUser(CreateView):
             user_obj.save()
             messages.success(request, 'Create account successfully , now you can login !')
             return redirect('home')
-        messages.error(request, 'Account could not be created, pay attention to the errors')
+        message = show_first_error(form.errors)
+        messages.error(request, f'{message.get("field")} : {message.get("text").lstrip("*")}')
         return render(request, self.template_name, context={'form': form})
 
 

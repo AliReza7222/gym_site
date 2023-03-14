@@ -10,7 +10,7 @@ form { max-width:420px; margin:50px auto; }
   border-radius: 5px;
   line-height: 22px;
   background-color: transparent;
-  border:2px solid #07A279;
+  border:2px solid #333333;
   transition: all 0.3s;
   padding: 13px;
   margin-bottom: 15px;
@@ -24,7 +24,7 @@ form { max-width:420px; margin:50px auto; }
 [type="submit"] {
   font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   width: 50%;
-  background:#07A279;
+  background:#333333;
   border-radius:5px;
   border:0;
   cursor:pointer;
@@ -65,4 +65,13 @@ a{
     right: auto;
     width: 100%;
   }
+}
+
+h1{
+    color: #333333; /* Set font color to a beautiful red-orange */
+    font-size: 36px; /* Set font size to 36 pixels */
+    text-align: center; /* Center align the heading */
+    text-transform: uppercase; /* Convert all text to uppercase */
+    letter-spacing: 2px; /* Add a small amount of letter spacing */
+    font-family: Arial, sans-serif; /* Use the Arial font or any sans-serif font if Arial is not available */
 }
