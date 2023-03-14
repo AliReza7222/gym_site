@@ -2,19 +2,20 @@ import os.path
 
 from accounts.views import show_first_error
 from accounts.forms import FormRegisterUser
-from .models import Locations, Master, Student, MyUser, Gyms
+from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE
 from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
                     ChoiceTypeUser, FormStudentStepThree, FormGyms, ManagementForm)
 
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView, DetailView, FormView, CreateView
+from django.views.generic import TemplateView, DetailView, ListView, CreateView
 from django.views.generic.edit import UpdateView
 
 
@@ -280,3 +281,57 @@ class CreateGym(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
         message = show_first_error(form.errors)
         messages.error(request, f'{message.get("field")} : {message.get("text").lstrip("*")}')
         return redirect('create_gym')
+
+
+class AllGyms(ListView):
+    model = Gyms
+    template_name = 'gyms/show_gyms.html'
+    context_object_name = 'gyms'
+
+    def get_queryset(self):
+        data = self.request.GET
+        num_page = data.get('page') or None
+        locations = Locations.PROVINCE_CHOICE
+        fields = FIELD_SPORTS_CHOICE
+        q = Q()
+        query_set = Gyms.objects.all()
+        self.paginate_by = 1
+        # name_gym, province_gym, name_city_gym, field_gym = None, None, None, None
+        # if data and num_page is None:
+        name_gym = data.get('name') or None
+        province_gym, name_city_gym = data.get('province') or None, data.get('name_city') or None
+        field_gym = data.get('field') or None
+
+        if province_gym is not None:
+            for code, name_province in locations:
+                if province_gym.title() == name_province:
+                    province_gym = code
+                    q &= Q(location__province=province_gym)
+                    break
+            if province_gym == data.get('province'):
+                province_gym = '0'
+
+        if field_gym is not None:
+            for code, name in fields:
+                if field_gym.title() == name:
+                    field_gym = int(code)
+                    q &= Q(field_sport_gym=field_gym)
+                    break
+            if field_gym == data.get('field'):
+                field_gym = '0'
+
+        if name_city_gym is not None:
+            name_city_gym = name_city_gym.title()
+            q &= Q(location__name_city=name_city_gym)
+
+        if name_gym is not None:
+            q &= Q(name__icontains=name_gym)
+
+        if name_gym or province_gym or name_city_gym or field_gym:
+            self.paginate_by = None
+            query_set = Gyms.objects.filter(q)
+        if (name_gym is None) and (name_city_gym is None):
+            if (province_gym is '0') or (field_gym is '0'):
+                self.paginate_by = None
+                query_set = None
+        return query_set

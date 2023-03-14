@@ -1,0 +1,76 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block link %}
+  <link rel="stylesheet" href="{% static 'css/all_gyms.css' %}" type="text/css">
+{% endblock %}
+
+
+{% block script %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Gyms</h1><hr>
+<p class="help">You can search for your favorite club based on the desired fields.</p>
+<div class="row">
+  <form method="get">
+    &emsp;
+    <input type="text" class="field" placeholder="search name gym " name="name">
+    <input type="text" class="field" placeholder="search location province gym " name="province">
+    <input type="text" class="field" placeholder="search location name city gym " name="name_city">
+    <input type="text" class="field" placeholder="search name field " name="field">
+    <button type="submit" class="button">Search</button>
+  </form>
+</div><br><hr><br>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Field</th>
+      <th scope="col">Gender</th>
+      <th scope="col">Location</th>
+      <th scope="col">State</th>
+      <th scope="col">Master</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for gym in gyms %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td><a href="#">{{ gym.name }}</a></td>
+      <td>{{ gym.get_field_sport_gym_display }}</td>
+      <td>{{ gym.get_gender_display }}</td>
+      <td>{{ gym.location }}</td>
+      <td>{{ gym.get_state_display }}</td>
+      <td>{{ gym.master }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% if is_paginated %}
+<hr>
+<p class="center_p">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+</p><hr>
+{% endif %}
+{% if is_paginated %}
+    <div class="pagination pagination-centered">
+        <p class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
+<!--{% if back %}-->
+<!--  <a href="{% url 'all_gyms' %}" class="back">Back To First Page</a>-->
+<!--{% endif %}-->
+{% endblock %}
