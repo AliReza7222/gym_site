@@ -1,6 +1,10 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block title %} Home {% endblock %}
+{% block icon %}
+    <link rel="icon" href="{% static 'img/home.png' %}">
+{% endblock %}
 
 {% block content %}
     <h1>Home</h1>
