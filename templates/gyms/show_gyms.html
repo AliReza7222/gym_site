@@ -1,6 +1,8 @@
 {% extends '_base.html' %}
 {% load static %}
 
+{% block title %} List Gyms {% endblock %}
+
 {% block link %}
   <link rel="stylesheet" href="{% static 'css/all_gyms.css' %}" type="text/css">
 {% endblock %}
@@ -39,7 +41,7 @@
   {% for gym in gyms %}
     <tr>
       <th scope="row">{{ forloop.counter }}</th>
-      <td><a href="#">{{ gym.name }}</a></td>
+      <td><a href="{% url 'info_gym' gym.pk %}">{{ gym.name }}</a></td>
       <td>{{ gym.get_field_sport_gym_display }}</td>
       <td>{{ gym.get_gender_display }}</td>
       <td>{{ gym.location }}</td>

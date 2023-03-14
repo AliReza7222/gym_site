@@ -295,7 +295,7 @@ class AllGyms(ListView):
         fields = FIELD_SPORTS_CHOICE
         q = Q()
         query_set = Gyms.objects.all()
-        self.paginate_by = 1
+        self.paginate_by = 24
         # name_gym, province_gym, name_city_gym, field_gym = None, None, None, None
         # if data and num_page is None:
         name_gym = data.get('name') or None
@@ -335,3 +335,10 @@ class AllGyms(ListView):
                 self.paginate_by = None
                 query_set = None
         return query_set
+
+
+class InformationGym(LoginRequiredMixin, DetailView):
+    login_url = 'login'
+    model = Gyms
+    template_name = 'gyms/info_gym.html'
+    context_object_name = 'gym'

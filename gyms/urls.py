@@ -3,7 +3,8 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import Home, About, ProfileUser, ShowProfile, UpdateProfile, CreateGym, AllGyms
+from .views import Home, About, ProfileUser, ShowProfile, \
+    UpdateProfile, CreateGym, AllGyms, InformationGym
 
 
 urlpatterns = [
@@ -13,7 +14,9 @@ urlpatterns = [
     path('show_profile/<uuid:pk>/', ShowProfile.as_view(), name='show_profile'),
     path('update_profile/<uuid:pk>/', UpdateProfile.as_view(), name='update_profile'),
     path('create_gym/', CreateGym.as_view(), name='create_gym'),
-    path('all_gyms/', AllGyms.as_view(), name='all_gyms')
+    path('all_gyms/', AllGyms.as_view(), name='all_gyms'),
+    path('info_gym/<uuid:pk>/', InformationGym.as_view(), name='info_gym')
+
 ]
 
 if settings.DEBUG:

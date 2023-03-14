@@ -1,0 +1,67 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %} Gym {{ gym.name }} {% endblock %}
+
+{% block link %}
+    <link href="{% static 'css/info_gym.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block scrip %} {% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>Information Gym {{ gym.name }}</h1><hr>
+
+        <section class="about">
+            <h2>Gym <b>{{ gym.name }}</b></h2><hr class="hr-color"> <br>
+            <div class="row">
+                &emsp;<h5>Name Gym :</h5>&emsp;&emsp;<p>{{ gym.name }}</p>
+                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5>Gender Gym :</h5>&emsp;&emsp;<p>{{ gym.get_gender_display }}</p>
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5> Field Gym :</h5>&emsp;&emsp;<p>{{ gym.get_field_sport_gym_display }}</p>
+            </div><br><br>
+            <div class="row">
+                &emsp;<h5>Time Start Gym:</h5>&emsp;&emsp;<p>{{ gym.time_start_working }}</p>
+                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5>Time End Gym :</h5>&emsp;&emsp;<p>{{ gym.time_end_working }}</p>
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5> Sate Gym :</h5>&emsp;&emsp;<p>{{ gym.get_state_display }}</p>
+            </div><br><br>
+            <div class="row">
+                &emsp;<h5>Capacity Gym:</h5>&emsp;<p>{{ gym.capacity_gym }} Person</p>
+                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5>Number Registered :</h5>&emsp;<p>{{ gym.number_register_person }} Person</p>
+            </div><br><br>
+            <div class="row">
+                &emsp;<h5> Master Gym:</h5>&emsp;<p>{{ gym.master }}</p>
+                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5> Monthly Tuition:</h5>&emsp;<p>{{ gym.monthly_tuition }}$</p>
+
+            </div><br><br>
+            <div class="row">
+                &emsp;<h5> Days Work Gym:</h5>&emsp;<p>{{ gym.get_days_work_display }}</p>
+            </div>
+        </section>
+
+        <section class="contact">
+            <h2><b>Location Gym</b></h2><hr class="hr-color"> <br>
+            <div class="row">
+                &emsp;<h5> Province:</h5>&emsp;<p>{{ gym.location.get_province_display }}</p>
+                 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <h5> Name City:</h5>&emsp;<p>{{ gym.location.name_city }}</p>
+
+            </div><br><br>
+            <div class="row">
+                &emsp;<h5> Address Exact:</h5>&emsp;
+            </div>
+            &emsp;<p>{{ gym.address_exact }}</p>
+        </section>
+
+    </div>
+
+
+{% endblock %}
