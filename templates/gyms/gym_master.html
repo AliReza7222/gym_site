@@ -38,9 +38,9 @@
       <td>{{ gym.location }}</td>
       <td>{{ gym.get_state_display }}</td>
       <td>{{ gym.master }}</td>
-      <td><a href="#Edit" style="color:green">Edit</a></td>
-      <td><a href="{% url 'delete_gym' gym.pk %}" style="color:red" onclick="gym_delete({{ forloop.counter}});"
-             id="delete_gym_{{ forloop.counter }}">Delete</a></td>
+      <td><a href="#Edit" class="e-link">Edit</a></td>
+      <td><a href="{% url 'delete_gym' gym.pk %}" onclick="gym_delete({{ forloop.counter}});"
+             id="delete_gym_{{ forloop.counter }}" class="d-link">Delete</a></td>
     </tr>
   {% endfor %}
   </tbody>
