@@ -15,7 +15,7 @@ h1 {
 section {
     margin-top: 30px;
     padding: 20px;
-    background-color: #144C06;
+    background-color: #1F1E1E;
     box-shadow: 10px 10px 10px rgb(32, 32, 32, 0.72);
     border-radius: 20px;
 }
@@ -28,6 +28,10 @@ h2 {
 
 .hr-color{
     background:white
+}
+
+.hr-color2{
+    background: black;
 }
 
 h5 {
