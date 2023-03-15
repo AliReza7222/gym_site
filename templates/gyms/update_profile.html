@@ -63,8 +63,9 @@
               {% for value, text in form.profession.field.choices %}
                     {% if value in profession %}
                             <option value="{{ value }}" selected>{{ text }}</option>
+                    {% else %}
+                            <option value="{{ value }}">{{ text }}</option>
                     {% endif %}
-                    <option value="{{ value }}">{{ text }}</option>
               {% endfor %}
             </select>
 
@@ -110,8 +111,9 @@
               {% for value, text in form.favorite_sport.field.choices %}
                     {% if value in favorite_sport %}
                             <option value="{{ value }}" selected>{{ text }}</option>
+                    {% else %}
+                            <option value="{{ value }}">{{ text }}</option>
                     {% endif %}
-                    <option value="{{ value }}">{{ text }}</option>
               {% endfor %}
             </select>
 
