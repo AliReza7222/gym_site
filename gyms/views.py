@@ -296,8 +296,6 @@ class AllGyms(ListView):
         q = Q()
         query_set = Gyms.objects.all()
         self.paginate_by = 24
-        # name_gym, province_gym, name_city_gym, field_gym = None, None, None, None
-        # if data and num_page is None:
         name_gym = data.get('name') or None
         province_gym, name_city_gym = data.get('province') or None, data.get('name_city') or None
         field_gym = data.get('field') or None
@@ -342,3 +340,15 @@ class InformationGym(LoginRequiredMixin, DetailView):
     model = Gyms
     template_name = 'gyms/info_gym.html'
     context_object_name = 'gym'
+
+
+class ListGymsMaster(LoginRequiredMixin, CheckUserMasterMixin, ListView):
+    login_url = 'login'
+    model = Gyms
+    template_name = 'gyms/gym_master.html'
+    context_object_name = 'gyms'
+
+    def get_queryset(self):
+        master = self.request.user.master
+        query_gym = Gyms.objects.filter(master=master)
+        return query_gym
