@@ -3,19 +3,20 @@ import os.path
 from accounts.views import show_first_error
 from accounts.forms import FormRegisterUser
 from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE
-from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin
+from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
                     ChoiceTypeUser, FormStudentStepThree, FormGyms, ManagementForm)
 
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView, DetailView, ListView, CreateView
+from django.views.generic import TemplateView, DetailView, ListView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
 
 
@@ -329,7 +330,7 @@ class AllGyms(ListView):
             self.paginate_by = None
             query_set = Gyms.objects.filter(q)
         if (name_gym is None) and (name_city_gym is None):
-            if (province_gym is '0') or (field_gym is '0'):
+            if (province_gym == '0') or (field_gym == '0'):
                 self.paginate_by = None
                 query_set = None
         return query_set
@@ -352,3 +353,19 @@ class ListGymsMaster(LoginRequiredMixin, CheckUserMasterMixin, ListView):
         master = self.request.user.master
         query_gym = Gyms.objects.filter(master=master)
         return query_gym
+
+
+class DeleteGymMaster(LoginRequiredMixin, CheckGymMasterMixin, DeleteView):
+    login_url = 'login'
+    model = Gyms
+
+    def get(self, request, *args, **kwargs):
+        confirm_delete = request.GET.get('result')
+        if confirm_delete == 'true':
+            pk_gym = kwargs.get('pk')
+            gym = Gyms.objects.get(pk=pk_gym)
+            name_gym = gym.name
+            gym.delete()
+            messages.success(request, f'Successfully Delete your Gym {name_gym} .')
+            return redirect('gyms_master')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])

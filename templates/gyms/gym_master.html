@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="{% static 'css/all_gyms.css' %}" type="text/css">
 {% endblock %}
 
+{% block script %}
+  <script src="{% static 'js/delete_gym.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <h1>Your Gyms</h1><hr>
@@ -35,8 +38,9 @@
       <td>{{ gym.location }}</td>
       <td>{{ gym.get_state_display }}</td>
       <td>{{ gym.master }}</td>
-      <td><a href="#Edit" style="color:green">click here</a></td>
-      <td><a href="#delete" style="color:red">Delete</a> </td>
+      <td><a href="#Edit" style="color:green">Edit</a></td>
+      <td><a href="{% url 'delete_gym' gym.pk %}" style="color:red" onclick="gym_delete({{ forloop.counter}});"
+             id="delete_gym_{{ forloop.counter }}">Delete</a></td>
     </tr>
   {% endfor %}
   </tbody>
