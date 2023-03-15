@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block content %}
+    <section>
     <div class="container emp-profile">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -46,6 +47,12 @@
                     </div>
                     <div class="col-md-2">
                         <a href="{% url 'update_profile' user.pk %}" class="profile-edit-btn" >Edit Profile</a>
+                        <br><br>
+                        {% if user.type_user == 'M' %}
+                            <a href="{% url 'gyms_master' %}" class="profile-edit-btn" >My Gym</a>
+                        {% elif user.type_user == 'S' %}
+                            <a href="#" class="profile-edit-btn" >Gym Registered</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -94,6 +101,26 @@
                                                 <p>{{ request.user.email }}</p>
                                             </div>
                                         </div>
+<!--                                        {% if user.type_user == 'M' %}-->
+<!--                                              <div class="row">-->
+<!--                                                <div class="col-md-6">-->
+<!--                                                    <label>My Gym</label>-->
+<!--                                                </div>-->
+<!--                                                <div class="col-md-6">-->
+<!--                                                    <a href="{% url 'gyms_master' %}" class="fancy-link">Click Here</a>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        {% elif user.type_user == 'S' %}-->
+<!--                                                <div class="row">-->
+<!--                                                    <div class="col-md-6">-->
+<!--                                                        <label>Gym Registered</label>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="col-md-6">-->
+<!--                                                        <a href="#show_gym_registered" class="fancy-link">Click Here</a>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                        {% endif %}-->
+
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>Locations</label>
@@ -134,25 +161,7 @@
                                                 <p>{{ info_prof.national_code }}</p>
                                             </div>
                                         </div>
-                                        {% if user.type_user == 'M' %}
-                                              <div class="row">
-                                                <div class="col-md-6">
-                                                    <label>My Gym</label>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <a href="#show_gym" class="fancy-link">Click Here</a>
-                                                </div>
-                                            </div>
-                                        {% elif user.type_user == 'S' %}
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <label>Gym Registered</label>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <a href="#show_gym_registered" class="fancy-link">Click Here</a>
-                                                    </div>
-                                                </div>
-                                        {% endif %}
+
                                 <hr>
 
                             </div>
@@ -161,4 +170,5 @@
                 </div>
             </form>
         </div>
+        </section>
 {% endblock %}
