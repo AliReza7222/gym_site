@@ -1,0 +1,96 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block title %}Create Gym {% endblock %}
+
+{% block link %}
+    <link type="text/css" href="{% static 'css/select_multi.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet"/>
+
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'js/multiselect-dropdown.js' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    <script src="{% static 'js/select2.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <h2>Update Gym </h2><br>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.name %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.gender %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.field_sport_gym %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.capacity_gym %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="id_time_start_working">Time start working</label>
+                <input type="time" name="time_start_working" value="{{ time.time_start }}" class="form-control"
+                       placeholder="Time start working" title="" required="" id="id_time_start_working">
+            </div>
+            <div class="col-md-6">
+                <label for="id_time_end_working">Time end working</label>
+                <input type="time" name="time_end_working" value="{{ time.time_end }}"
+                       class="form-control" placeholder="Time end working" title=""
+                       required="" id="id_time_end_working">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% bootstrap_field form.state %}
+            </div>
+            <div class="col-md-6">
+                {% bootstrap_field form.monthly_tuition %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p>Days Work</p>
+                <select name="days_work" id="days_work"
+                        multiple onchange="console.log(Array.from(this.selectedOptions).map(x=>x.value??x.text))"
+                        multiselect-hide-x="true">
+                        {% for value, text in form.days_work.field.choices %}
+                                        {% if text in days_work %}
+                                            <option value="{{ value }}" selected>{{ text }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ text }}</option>
+                                        {% endif %}
+                          {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <p>Location</p>
+                 <select class="js-select2" name="location" id="location">
+                        {% for value, text in form.location.field.choices %}
+                                {% if value == location.id %}
+                                    <option value="{{ value }}" selected>{{ text }}</option>
+                                {% else %}
+                                    <option value="{{ value }}">{{ text }}</option>
+                                {% endif %}
+                        {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% bootstrap_field form.address_exact %}
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+{% endblock %}

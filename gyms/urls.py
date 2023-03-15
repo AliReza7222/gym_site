@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import Home, About, ProfileUser, ShowProfile, \
-    UpdateProfile, CreateGym, AllGyms, InformationGym, ListGymsMaster, DeleteGymMaster
+    UpdateProfile, CreateGym, AllGyms, InformationGym, ListGymsMaster, DeleteGymMaster, UpdateGymMaster
 
 
 urlpatterns = [
@@ -17,7 +17,8 @@ urlpatterns = [
     path('all_gyms/', AllGyms.as_view(), name='all_gyms'),
     path('info_gym/<uuid:pk>/', InformationGym.as_view(), name='info_gym'),
     path('gym_master/', ListGymsMaster.as_view(), name='gyms_master'),
-    path('delete_gym/<uuid:pk>/', DeleteGymMaster.as_view(), name='delete_gym')
+    path('delete_gym/<uuid:pk>/', DeleteGymMaster.as_view(), name='delete_gym'),
+    path('update_gym/<uuid:pk>/', UpdateGymMaster.as_view(), name='update_gym')
 
 ]
 

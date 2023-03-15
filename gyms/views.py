@@ -1,6 +1,7 @@
 import os.path
 
 from accounts.views import show_first_error
+from .validations import get_words
 from accounts.forms import FormRegisterUser
 from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE
 from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin
@@ -369,3 +370,45 @@ class DeleteGymMaster(LoginRequiredMixin, CheckGymMasterMixin, DeleteView):
             messages.success(request, f'Successfully Delete your Gym {name_gym} .')
             return redirect('gyms_master')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class UpdateGymMaster(LoginRequiredMixin, CheckGymMasterMixin, UpdateView):
+    login_url = 'login'
+    model = Gyms
+    template_name = 'gyms/update_gym.html'
+
+    def get_form(self, form_class=None):
+        data_gym = Gyms.objects.filter(pk=self.kwargs.get('pk')).values()[0]
+        form_obj = FormGyms(initial=data_gym)
+        return form_obj
+
+    def get_context_data(self, **kwargs):
+        context = dict()
+        context['form'] = self.get_form()
+        gym = Gyms.objects.filter(pk=self.kwargs.get('pk'))[0]
+        context['location'] = gym.location
+        context['days_work'] = gym.get_days_work_list()
+        context['time'] = {'time_start': gym.time_start_working.strftime('%H:%M'),
+                           'time_end': gym.time_end_working.strftime('%H:%M')}
+        return context
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST.copy()
+        print(len(data['name']))
+        obj_location = Locations.objects.get(pk=data.get('location'))
+        data['location'] = obj_location
+        data['name'] = f'{data.get("name")}  NEW'
+
+        form_obj = FormGyms(data)
+        if form_obj.is_valid():
+            form_confirm = form_obj.cleaned_data
+            form_confirm['name'] = form_confirm.get('name').rstrip('  NEW')
+            Gyms.objects.update_or_create(id=kwargs.get('pk'), defaults=form_confirm)
+            messages.success(request, f'Successfully Update Gym {form_confirm.get("name")}')
+            return redirect('gyms_master')
+        message = show_first_error(form_obj.errors)
+        messages.error(request, f'{message.get("field")} : {message.get("text").lstrip("*")}')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+
