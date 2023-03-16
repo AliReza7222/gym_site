@@ -343,6 +343,29 @@ class InformationGym(LoginRequiredMixin, DetailView):
     template_name = 'gyms/info_gym.html'
     context_object_name = 'gym'
 
+    def split_number(self, value):
+        value = str(value)
+        answer_num = ''
+        if len(value) <= 3:
+            return value
+        for index_word, num in enumerate(value[::-1], start=1):
+            answer_num += num
+            if index_word % 3 == 0 and len(value) != index_word:
+                answer_num += ','
+        return answer_num[::-1]
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        if self.object:
+            context["object"] = self.object
+            number_split = self.split_number(self.object.monthly_tuition)
+            context['monthly_tuition'] = number_split
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+        context.update(kwargs)
+        return super().get_context_data(**context)
+
 
 class ListGymsMaster(LoginRequiredMixin, CheckUserMasterMixin, ListView):
     login_url = 'login'
