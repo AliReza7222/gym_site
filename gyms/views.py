@@ -275,6 +275,10 @@ class CreateGym(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
         form = FormGyms(data)
         if form.is_valid():
             data_confirm = form.cleaned_data
+            name, location_gym = data_confirm.get('name'), data_confirm.get('location')
+            if Gyms.objects.filter(name=name, location=location_gym).exists():
+                messages.error(request, 'A Gym With Name exists This Location !')
+                return HttpResponseRedirect(request.META['HTTP_REFERER'])
             data_confirm['master'] = user.master
             Gyms.objects.create(**data_confirm)
             message = 'Gym Successfully Created !'
@@ -417,15 +421,17 @@ class UpdateGymMaster(LoginRequiredMixin, CheckGymMasterMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         data = request.POST.copy()
-        print(len(data['name']))
+        gym = Gyms.objects.get(pk=kwargs.get('pk'))
         obj_location = Locations.objects.get(pk=data.get('location'))
         data['location'] = obj_location
-        data['name'] = f'{data.get("name")}  NEW'
-
         form_obj = FormGyms(data)
+
         if form_obj.is_valid():
             form_confirm = form_obj.cleaned_data
-            form_confirm['name'] = form_confirm.get('name').rstrip('  NEW')
+            name = form_confirm.get('name')
+            if gym.name != name and Gyms.objects.filter(name=name, location=obj_location):
+                messages.error(request, 'A Gym With Name Exists This Location !')
+                return HttpResponseRedirect(request.META['HTTP_REFERER'])
             Gyms.objects.update_or_create(id=kwargs.get('pk'), defaults=form_confirm)
             messages.success(request, f'Successfully Update Gym {form_confirm.get("name")}')
             return redirect('gyms_master')
