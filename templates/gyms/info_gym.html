@@ -16,41 +16,55 @@
   <details>
     <summary>Name Gym</summary>
     <p>
-       Name Gym Is <b>{{ gym.name }}</b> .
+       Name Gym Is <b><u>{{ gym.name }}</u></b> .
     </p>
   </details>
   <details>
     <summary>Master Gym</summary>
     <p>
-       Master Gym Is <b>{{ gym.master }}</b> .
+       Master Gym Is <b><u>{{ gym.master }}</u></b>  With Email <b><u>{{ gym.master.user.email }}</u></b> and With Number Phone
+      <b><u>{{ gym.master.number_phone }}</u></b> and <b><u>{{ gym.master.age }}</u></b> years old .
     </p>
   </details>
   <details>
     <summary>Field Gym</summary>
     <p>
-      Field Gym <b>{{ gym.name }}</b> Is <b>{{ gym.get_field_sport_gym_display }}</b> .
+      Field Gym <b><u>{{ gym.name }}</u></b> Is <b><u>{{ gym.get_field_sport_gym_display }}</u></b> .
     </p>
   </details>
   <details>
     <summary>Days Work</summary>
-    <p>Days Work Gym Is <b>{{ gym.get_days_work_display }}</b> .</p>
+    <p>Days Work Gym Is <b><u>{{ gym.get_days_work_display }}</u></b> .</p>
   </details>
   <details>
     <summary>Time Working Gym</summary>
-    <p>Time Working Gym Is Start Gym <b>{{ gym.time_start_working }}</b> And End <b>{{ gym.time_end_working }}</b> .</p>
+    <p>Time Working Gym Is Start Gym <b><u>{{ gym.time_start_working }}</u></b> And End <b><u>{{ gym.time_end_working }}</u></b> .</p>
+  </details>
+  <details>
+    <summary>State Gym</summary>
+    <p>The State of the Gym is <b><u>{{ gym.get_state_display }}</u></b> .</p>
+  </details>
+  <details>
+    <summary>State Gym</summary>
+    <p>The State of the Gym is <b><u>{{ gym.get_state_display }}</u></b> .</p>
+  </details>
+  <details>
+    <summary>Number registered people</summary>
+    <p>The number of people registered in the club is <b><u>{{ gym.number_register_person }}</u></b> people.</p>
+  </details>
+  <details>
+    <summary>Club Tuition Monthly</summary>
+    <p>The club tuition is <b>{{ monthly_tuition}}</b> $.</p>
   </details>
   <details>
     <summary>Location Gym</summary>
-    <p>The province/city of the club is <b>{{ gym.location }}</b> And
+    <p>The province/city of the club is <b><u>{{ gym.location }}</u></b> And
       its more precise address is : </p><p><b>{{ gym.address_exact }}</b></p>
   </details>
   <details>
     <summary>Other Information</summary>
-    <p>The Capacity of the Gym is <b>{{ gym.capacity_gym }}</b> Person.</p>
-    <p>The Gender of the Gym is <b>{{ gym.get_gender_display }}</b> .</p>
-    <p>The State of the Gym is <b>{{ gym.get_state_display }}</b> .</p>
-    <p>The number of people registered in the club is <b>{{ gym.number_register_person }}</b> people.</p>
-    <p>The club tuition is <b>{{ monthly_tuition}}</b> $.</p>
+    <p>The Capacity of the Gym is <b><u>{{ gym.capacity_gym }}</u></b> Person.</p>
+    <p>The Gender of the Gym is <b><u>{{ gym.get_gender_display }}</u></b> .</p>
   </details>
 </section>
 <br><br>
