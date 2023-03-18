@@ -51,7 +51,8 @@
                         {% if user.type_user == 'M' %}
                             <a href="{% url 'gyms_master' %}" class="profile-edit-btn" >My Gym</a>
                         {% elif user.type_user == 'S' %}
-                            <a href="#" class="profile-edit-btn" >Gym Registered</a>
+                            <a href="#" class="profile-edit-btn" >Gym Registered</a><br><br>
+                            <a href="{% url 'payment_simulator' %}" class="profile-edit-btn" >Charging Account</a>
                         {% endif %}
                     </div>
                 </div>
