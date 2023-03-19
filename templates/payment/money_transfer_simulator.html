@@ -1,0 +1,34 @@
+{% extends '_base_payment.html' %}
+
+{% load static %}
+
+{% block head %}
+<h3 class="h-head"><em> Money Transfer Simulator</em></h3><hr>
+{% endblock %}
+
+{% block help_message %}
+<div class="alert alert-dark" role="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
+    Enter the desired user's email and phone number .
+</div>
+{% endblock %}
+
+{% block input_form %}
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter His/Her Email" required>
+
+        <label for="number">Phone Number</label>
+        <input id="number" type="text" name="phone_number" placeholder="Enter His/Her Phone Number" required>
+
+        <label for="name">Amount Money</label>
+        <input type="number" id="name" name="credit_student" placeholder="Enter the amount of money you can transfer" required>
+
+        <label for="code" class="label-code">Unique Code</label>
+        <div class="wrapper">
+            <input id="code" type="number" name="code_send" placeholder="Enter Your Code " required>
+            <a class="get-code" name="result" id="send-link" href="{% url 'create_code2' %}" type="submit">Get Code</a>
+        </div>
+        <div id="timer" class="hide help"></div>
+            <br>
+        <button type="submit" formmethod="post">Charge</button>
+{% endblock %}

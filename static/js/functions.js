@@ -2,14 +2,14 @@ $(document).ready(function() {
 
     $('#send-link').click(function(e) {
         $('#load-message').html('Please wait, the code will be sent soon  .....');
-        $('#load').show();
+        $('#load').removeClass('hide');
         e.preventDefault(); // prevent the link from navigating to a new page
         $.ajax({
             url: 'create_code/', // replace with your own URL
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                $('#load').remove();
+                $('#load').addClass('hide');
                 $('#message').html(response.message);
                 $('#info-msg').show();
                 $('#timer').removeClass('hide');
@@ -29,6 +29,7 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 console.log('Error:', error);
+                $('#load').addClass('hide');
                 $('#message-error').html("A problem occurred, the code could not be sent, try again.");
                 $('#error').show();
             }

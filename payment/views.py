@@ -1,20 +1,18 @@
 import environs
 import random
-import time
-import json
 from string import digits
 
 from accounts.models import MyUser
-from gyms.models import Student
+from gyms.models import Student, Master
 from accounts.views import show_first_error
 from .forms import FormPaymentSimulator
-from .mixin import CheckUserStudentMixin
+from .mixin import CheckUserStudentMixin, CheckUserMasterMixin
 
 from django.views.generic import FormView
 from django.urls import reverse
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django.http import QueryDict, HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -63,7 +61,7 @@ class PaymentGatewaySimulator(LoginRequiredMixin, CheckUserStudentMixin, FormVie
         return redirect(reverse('payment_simulator'))
 
 
-class FieldStudentPaymentSimulator(LoginRequiredMixin, CheckUserStudentMixin, FormView):
+class CreateCodePaymentSimulator(LoginRequiredMixin, FormView):
     login_url = 'login'
     form_class = FormPaymentSimulator
 
@@ -84,8 +82,71 @@ class FieldStudentPaymentSimulator(LoginRequiredMixin, CheckUserStudentMixin, Fo
         recipient_list = [request.user.email]
         send_mail(subject_mail, message, from_email, recipient_list)
         # set in code cache
-        key_user = str(request.user.student.id)
-        cache.set(key_user, code, timeout=78)
+        if request.user.type_user == 'S':
+            key_user = str(request.user.student.id)
+            cache.set(key_user, code, timeout=78)
+        elif request.user.type_user == 'M':
+            key_user = str(request.user.master.id)
+            cache.set(key_user, code, timeout=78)
         # note send email
         message_success_send = 'The payment code has been sent to your email !'
         return JsonResponse({'message': message_success_send})
+
+
+class MoneyTransferSimulator(LoginRequiredMixin, CheckUserMasterMixin, FormView):
+    login_url = 'login'
+    template_name = 'payment/money_transfer_simulator.html'
+    form_class = FormPaymentSimulator
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        form_obj = FormPaymentSimulator(data)
+        if form_obj.is_valid():
+            data_confirm = form_obj.cleaned_data
+            student_user = Student.objects.filter(number_phone=data_confirm.get('phone_number'),
+                                                  user__email=data_confirm.get('email'))
+            master_user = Master.objects.filter(number_phone=data_confirm.get('phone_number'),
+                                                user__email=data_confirm.get('email'))
+            amount_money = data_confirm.get('credit_student')
+            if not (student_user or master_user):
+                cache.delete(request.user.master.id)
+                messages.error(request, 'There is no user with this email and phone number.')
+            elif form_obj.errors:
+                cache.delete(request.user.master.id)
+                message = show_first_error(form_obj.errors)
+                messages.error(request, f'{message.get("field")}: {message.get("text").lstrip("*")}')
+            elif cache.get(request.user.master.id) != data_confirm.get('code_send') and cache.get(request.user.master.id) is not None:
+                cache.delete(request.user.master.id)
+                messages.error(request, 'The entered code is incorrect.')
+
+            elif cache.get(request.user.master.id) is None:
+                messages.error(request, 'Your unique code has expired.')
+
+            elif amount_money > request.user.master.salary:
+                cache.delete(request.user.master.id)
+                messages.error(request, "You don't have that much money.")
+            elif master_user[0].id == request.user.master.id:
+                cache.delete(request.user.master.id)
+                messages.error(request, 'This Information is for you !!!!!!')
+            else:
+                master = request.user.master
+
+                if student_user:
+                    student_id = student_user[0].id
+                    student = Student.objects.get(id=student_id)
+                    student.credit += amount_money
+                    student.save()
+                elif master_user:
+                    master_id = master_user[0].id
+                    master_other = Master.objects.get(id=master_id)
+                    master_other.salary += amount_money
+                    master_other.save()
+
+                master.salary -= amount_money
+                master.save()
+
+                message = f'The money {amount_money} $ transfer was successful to email user \"{data_confirm["email"]}\"'
+                messages.success(request, message)
+                return redirect('home')
+
+        return redirect('money_transfer')
