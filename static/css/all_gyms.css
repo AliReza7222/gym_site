@@ -107,6 +107,7 @@
     font-weight: bold;
     transition: all 0.3s ease-in-out;
     position: relative;
+    text-decoration: none;
 }
 .e-link {
     color: green;
@@ -114,6 +115,7 @@
     font-weight: bold;
     transition: all 0.3s ease-in-out;
     position: relative;
+    text-decoration: none;
 }
 
 .d-link:before {
@@ -128,6 +130,7 @@
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease-in-out;
+    text-decoration: none;
 }
 .e-link:before {
     content: '';
@@ -141,6 +144,7 @@
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease-in-out;
+    text-decoration: none;
 }
 
 .d-link:hover:before {
@@ -149,4 +153,14 @@
 
 .e-link:hover:before {
     transform: scaleX(1);
+}
+
+.e-link:hover{
+    color:#79CD06;
+    text-decoration: none;
+}
+
+.d-link:hover{
+    color: #FF7F7F;
+    text-decoration: none;
 }

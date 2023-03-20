@@ -11,6 +11,7 @@
 .header-link:hover {
   background-color: #389396;
   color: #fff;
+  text-decoration: none;
   transform: scale(1.1);
 }
 
