@@ -87,6 +87,7 @@
   background-color: #1FC3CE;
   color:white;
   touch-action: auto;
+  text-decoration: none;
 }
 
 .label-code {

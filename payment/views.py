@@ -37,14 +37,17 @@ class PaymentGatewaySimulator(LoginRequiredMixin, CheckUserStudentMixin, FormVie
             if data_confirm.get('email') != user.email:
                 cache.delete(user.student.id)
                 messages.error(request, 'The email you entered is not the same as the registration email.')
+                messages.error(request, 'Your unique code has expired.')
 
             elif data_confirm.get('phone_number') != user.student.number_phone:
                 cache.delete(user.student.id)
                 messages.error(request, 'The Phone Number you entered is not the same as the registration Phone Number.')
+                messages.error(request, 'Your unique code has expired.')
 
             elif cache.get(user.student.id) is not None and cache.get(user.student.id) != data_confirm.get('code_send'):
                 cache.delete(user.student.id)
                 messages.error(request, 'The entered code is incorrect.')
+                messages.error(request, 'Your unique code has expired.')
 
             elif cache.get(user.student.id) is None:
                 messages.error(request, 'Your unique code has expired.')
@@ -57,7 +60,7 @@ class PaymentGatewaySimulator(LoginRequiredMixin, CheckUserStudentMixin, FormVie
             return redirect('payment_simulator')
 
         message = show_first_error(for_obj.errors)
-        messages.error(request, f'{message.get("field")}: {message.get("text").lstrip("*")}')
+        messages.error(request, f'{message.get("field")}: {message.get("text").lstrip("*")}\n and Your unique code has expired.')
         return redirect(reverse('payment_simulator'))
 
 
@@ -111,13 +114,16 @@ class MoneyTransferSimulator(LoginRequiredMixin, CheckUserMasterMixin, FormView)
             if not (student_user or master_user):
                 cache.delete(request.user.master.id)
                 messages.error(request, 'There is no user with this email and phone number.')
+                messages.error(request, 'Your unique code has expired.')
             elif form_obj.errors:
                 cache.delete(request.user.master.id)
                 message = show_first_error(form_obj.errors)
                 messages.error(request, f'{message.get("field")}: {message.get("text").lstrip("*")}')
+                messages.error(request, 'Your unique code has expired.')
             elif cache.get(request.user.master.id) != data_confirm.get('code_send') and cache.get(request.user.master.id) is not None:
                 cache.delete(request.user.master.id)
                 messages.error(request, 'The entered code is incorrect.')
+                messages.error(request, 'Your unique code has expired.')
 
             elif cache.get(request.user.master.id) is None:
                 messages.error(request, 'Your unique code has expired.')
@@ -125,10 +131,12 @@ class MoneyTransferSimulator(LoginRequiredMixin, CheckUserMasterMixin, FormView)
             elif amount_money > request.user.master.salary:
                 cache.delete(request.user.master.id)
                 messages.error(request, "You don't have that much money.")
+                messages.error(request, 'Your unique code has expired.')
             elif master_user:
                 if master_user[0].id == request.user.master.id:
                     cache.delete(request.user.master.id)
                     messages.error(request, 'This Information is for yours !!!!!!')
+                    messages.error(request, 'Your unique code has expired.')
             else:
                 master = request.user.master
 
