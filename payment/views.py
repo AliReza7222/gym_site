@@ -125,9 +125,10 @@ class MoneyTransferSimulator(LoginRequiredMixin, CheckUserMasterMixin, FormView)
             elif amount_money > request.user.master.salary:
                 cache.delete(request.user.master.id)
                 messages.error(request, "You don't have that much money.")
-            elif master_user[0].id == request.user.master.id:
-                cache.delete(request.user.master.id)
-                messages.error(request, 'This Information is for you !!!!!!')
+            elif master_user:
+                if master_user[0].id == request.user.master.id:
+                    cache.delete(request.user.master.id)
+                    messages.error(request, 'This Information is for yours !!!!!!')
             else:
                 master = request.user.master
 
