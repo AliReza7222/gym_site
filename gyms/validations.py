@@ -21,6 +21,22 @@ def check_national_code(value):
     raise ValidationError('Enter a number nationality True contain numbers')
 
 
+def check_exists_code_national(value):
+    num_check = value.replace(value[-1], '')[::-1]
+    sum_nums = 0
+    for index_num, num in enumerate(num_check, start=2):
+        sum_nums += (int(num) * index_num)
+    remains = sum_nums % 11
+    if (remains < 2) and (value[-1] != remains):
+        raise ValidationError('The entered national code is not correct .')
+    last_num_value = 11 - remains
+    if (remains >= 2) and (int(value[-1]) != last_num_value):
+        raise ValidationError('The entered national code is not correct .')
+    return value
+
+
+
+
 def get_words(value):
     get_input = re.findall('[a-zA-Z\s]+', value)
     if len(get_input) == 1:

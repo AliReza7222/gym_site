@@ -1,7 +1,7 @@
 import os.path
 import uuid
 
-from .validations import true_phone_number, check_national_code, get_words
+from .validations import true_phone_number, check_national_code, get_words, check_exists_code_national
 
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -97,7 +97,7 @@ class Master(models.Model):
     gender = models.CharField(max_length=1, choices=Gender)
     number_phone = models.CharField(max_length=11, validators=[true_phone_number])
     image_person = models.ImageField(upload_to='image/')
-    national_code = models.CharField(max_length=10, validators=[check_national_code])
+    national_code = models.CharField(max_length=10, validators=[check_national_code, check_exists_code_national])
     salary = models.PositiveIntegerField(default=0, editable=False)
     profession = MultiSelectField(choices=FIELD_SPORTS_CHOICE, max_choices=100, max_length=100)
 
@@ -156,12 +156,15 @@ class Gyms(models.Model):
             self.save()
             return 0, 'full capacity'
 
-        elif capacity > num_register:
+        elif capacity > num_register and self.state != 2:
             self.number_register_person += 1
-            self.student = user
+            self.student_set.add(user)
             self.state = 1
             self.save()
             return 1, f'register {user}'
+
+        elif self.state == 2:
+            return 0, 'full capacity'
 
     def __str__(self):
         return f'{self.name}/({self.time_start_working})-({self.time_end_working})/{self.get_field_sport_gym_display()}'
@@ -180,7 +183,7 @@ class Student(models.Model):
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)])
     image_person = models.ImageField(upload_to='image/')
-    national_code = models.CharField(max_length=10, validators=[check_national_code])
+    national_code = models.CharField(max_length=10, validators=[check_national_code, check_exists_code_national])
     number_phone = models.CharField(max_length=11, validators=[true_phone_number])
     gyms = models.ManyToManyField(Gyms, blank=True)
     favorite_sport = MultiSelectField(choices=FIELD_SPORTS_CHOICE, max_choices=100, max_length=100)
