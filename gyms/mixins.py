@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import redirect
 from .models import Gyms
@@ -47,3 +47,14 @@ class CheckGymMasterMixin:
 
         messages.error(request, 'you don\'t enter to this page !')
         return redirect('home')
+
+
+class RegisterStudentMixin:
+
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.type_user == 'S':
+            return super().dispatch(request, *args, **kwargs)
+        elif user.type_user == 'M':
+            messages.error(request, 'You Can not Register Because You are Not Student !')
+            return redirect('all_gyms')

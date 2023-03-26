@@ -4,20 +4,21 @@ from accounts.views import show_first_error
 from .validations import get_words
 from accounts.forms import FormRegisterUser
 from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE
-from .mixins import CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin
+from .mixins import (CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin,
+                     RegisterStudentMixin)
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
                     ChoiceTypeUser, FormStudentStepThree, FormGyms, ManagementForm)
 
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView, DetailView, ListView, CreateView, DeleteView
+from django.views.generic import TemplateView, DetailView, ListView, CreateView, DeleteView, RedirectView
 from django.views.generic.edit import UpdateView
 
 
@@ -340,6 +341,33 @@ class AllGyms(ListView):
                 query_set = None
         return query_set
 
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        allow_empty = self.get_allow_empty()
+        user = request.user
+        if user.is_authenticated and user.type_user == 'S':
+            student = user.student
+            self.extra_context = {"gyms_student": student.gyms.all()}
+        if not allow_empty:
+            # When pagination is enabled and object_list is a queryset,
+            # it's better to do a cheap query than to load the unpaginated
+            # queryset in memory.
+            if self.get_paginate_by(self.object_list) is not None and hasattr(
+                    self.object_list, "exists"
+            ):
+                is_empty = not self.object_list.exists()
+            else:
+                is_empty = not self.object_list
+            if is_empty:
+                raise Http404(
+                    "Empty list and “%(class_name)s.allow_empty” is False."
+                    % {
+                        "class_name": self.__class__.__name__,
+                    }
+                )
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
 
 class InformationGym(LoginRequiredMixin, DetailView):
     login_url = 'login'
@@ -438,6 +466,54 @@ class UpdateGymMaster(LoginRequiredMixin, CheckGymMasterMixin, UpdateView):
         message = show_first_error(form_obj.errors)
         messages.error(request, f'{message.get("field")} : {message.get("text").lstrip("*")}')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class SendInfoGym(LoginRequiredMixin, RegisterStudentMixin, RedirectView):
+    login_url = 'login'
+
+    def get(self, request, *args, **kwargs):
+        pk_gym = kwargs.get('pk')
+        gym = Gyms.objects.get(pk=pk_gym)
+        info = {
+            'monthly_tuition': gym.monthly_tuition,
+            'gender': gym.get_gender_display(),
+            'time_start_working': gym.time_start_working,
+            'time_end_working': gym.time_end_working,
+        }
+        return JsonResponse(info)
+
+
+class RegisterStudentGym(LoginRequiredMixin, RegisterStudentMixin, UpdateView):
+    login_url = 'login'
+    redirect_field_name = 'all_gyms'
+    model = Gyms
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        gym = Gyms.objects.get(id=kwargs.get('pk'))
+        master_gym, tuition_gym = gym.master, gym.monthly_tuition
+        student = user.student
+        if student in gym.student_set.all():
+            messages.error(request, 'You are already registered in this gym.')
+            return redirect('all_gyms')
+        elif student.credit < tuition_gym:
+            messages.error(request, 'The money in your account is less than the Gym tuition.')
+            return redirect('all_gyms')
+        elif gym.state == 2 or gym.capacity_gym == gym.number_register_person:
+            messages.error(request, 'This Gym Full Capacity .')
+            return redirect('all_gyms')
+        elif student.credit >= tuition_gym:
+            master_gym.salary += tuition_gym
+            student.credit -= tuition_gym
+            register_student = gym.register_person(student)
+            if register_student[0]:
+                master_gym.save()
+                student.save()
+                message = f'You successfully register This Gym \"{gym.name}\"'
+                messages.success(request, message)
+                return redirect('all_gyms')
+
+
 
 
 

@@ -9,7 +9,7 @@
 
 
 {% block script %}
-
+    <script src="{% static 'js/window.js' %}" ></script>
 {% endblock %}
 
 {% block content %}
@@ -35,6 +35,9 @@
       <th scope="col">Location</th>
       <th scope="col">State</th>
       <th scope="col">Master</th>
+      {% if request.user.type_user != 'M' %}
+        <th scope="col">Register</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -47,10 +50,42 @@
       <td>{{ gym.location }}</td>
       <td>{{ gym.get_state_display }}</td>
       <td>{{ gym.master }}</td>
+      {% if request.user.type_user == 'S' and gym in gyms_student %}
+        <td><b><a class="r-link">Registered</a></b></td>
+      {% elif request.user.type_user != 'M' and gym.state == 2 %}
+        <td><em><u><b><a class="c-link">Completed</a></b></u></em></td>
+      {% elif request.user.type_user != 'M' %}
+        <td><a class="e-link {% if request.user.is_authenticated %} show-popup {% endif %}"
+               href="{% url 'register_gym' gym.pk %}" data-pk="{{ gym.pk }}" data-toggle="modal"
+               data-target="#popup-{{ forloop.counter }}" data-url="{% url 'get_gym_info' gym.pk %}">Register</a></td>
+
+      {% endif %}
     </tr>
   {% endfor %}
   </tbody>
 </table>
+{% if request.user.type_user != 'M' %}
+{% for gym in gyms %}
+<div id="popup-{{ loop.counter }}" class="overlay">
+    <div class="popup">
+        <h2>Before registering this gym, pay attention to the following points:</h2>
+        <hr>
+        <h5>1-The monthly tuition fee for the club is <em><b id="tuition"></b><b>$</b></em></h5>
+        <br>
+        <h5>2-The gym is for the <em><b id="gender"></b></em> gender</h5>.
+        <br>
+        <h5>3-The activity hours of the gym are from
+            <em><b id="working-hours-start"></b></em> to <em><b id="working-hours-end"></b></em>.</h5>
+        <br>
+        <h5>If you are sure that you want to register, click the <em><b>Register</b></em>
+            button, otherwise click the <em><b>Cancel</b></em> button.</h5>
+        <hr>
+        <button class="confirm" data-pk="{{ gym.pk }}">Register</button>
+        <button class="cancel">Cancel</button>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
 {% if is_paginated %}
 <hr>
 <p class="center_p">

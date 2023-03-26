@@ -3,8 +3,9 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import Home, About, ProfileUser, ShowProfile, \
-    UpdateProfile, CreateGym, AllGyms, InformationGym, ListGymsMaster, DeleteGymMaster, UpdateGymMaster
+from .views import (Home, About, ProfileUser, ShowProfile, UpdateProfile, CreateGym,
+                    AllGyms, InformationGym, ListGymsMaster, DeleteGymMaster, UpdateGymMaster,
+                    RegisterStudentGym, SendInfoGym)
 
 
 urlpatterns = [
@@ -18,7 +19,9 @@ urlpatterns = [
     path('info_gym/<uuid:pk>/', InformationGym.as_view(), name='info_gym'),
     path('gym_master/', ListGymsMaster.as_view(), name='gyms_master'),
     path('delete_gym/<uuid:pk>/', DeleteGymMaster.as_view(), name='delete_gym'),
-    path('update_gym/<uuid:pk>/', UpdateGymMaster.as_view(), name='update_gym')
+    path('update_gym/<uuid:pk>/', UpdateGymMaster.as_view(), name='update_gym'),
+    path('register_gym/<uuid:pk>/', RegisterStudentGym.as_view(), name='register_gym'),
+    path('get_gym_info/<uuid:pk>/', SendInfoGym.as_view(), name='get_gym_info')
 
 ]
 
