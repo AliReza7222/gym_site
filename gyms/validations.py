@@ -22,7 +22,7 @@ def check_national_code(value):
 
 
 def check_exists_code_national(value):
-    num_check = value.replace(value[-1], '')[::-1]
+    num_check = value[:9][::-1]
     sum_nums = 0
     for index_num, num in enumerate(num_check, start=2):
         sum_nums += (int(num) * index_num)
