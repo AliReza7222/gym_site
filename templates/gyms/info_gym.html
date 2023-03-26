@@ -10,54 +10,54 @@
 
 {% block content %}
 <section>
-  <h1>
+  <h1><em>
     Gym {{ gym.name }}
-  </h1><br>
-  <details>
+  </em></h1><br>
+  <details open>
     <summary><em>Name Gym</em></summary>
     <p>
        Name Gym Is <b><u>{{ gym.name }}</u></b> .
     </p>
   </details>
-  <details>
+  <details open>
     <summary><em>Master Gym</em></summary>
     <p>
        Master Gym Is <b><u>{{ gym.master }}</u></b>  With Email <b><u>{{ gym.master.user.email }}</u></b> and With Number Phone
       <b><u>{{ gym.master.number_phone }}</u></b> and <b><u>{{ gym.master.age }}</u></b> years old .
     </p>
   </details>
-  <details>
+  <details open>
     <summary><em>Field Gym</em></summary>
     <p>
       Field Gym <b><u>{{ gym.name }}</u></b> Is <b><u>{{ gym.get_field_sport_gym_display }}</u></b> .
     </p>
   </details>
-  <details>
+  <details open>
     <summary><em>Days Work</em></summary>
     <p>Days Work Gym Is <b><u>{{ gym.get_days_work_display }}</u></b> .</p>
   </details>
-  <details>
+  <details open>
     <summary><em>Time Working Gym</em></summary>
     <p>Time Working Gym Is Start Gym <b><u>{{ gym.time_start_working }}</u></b> And End <b><u>{{ gym.time_end_working }}</u></b> .</p>
   </details>
-  <details>
+  <details open>
     <summary><em>State Gym</em></summary>
     <p>The State of the Gym is <b><u>{{ gym.get_state_display }}</u></b> .</p>
   </details>
-  <details>
+  <details open>
     <summary><em>Number registered people</em></summary>
     <p>The number of people registered in the club is <b><u>{{ gym.number_register_person }}</u></b> people.</p>
   </details>
-  <details>
+  <details open>
     <summary><em>Club Tuition Monthly</em></summary>
     <p>The club tuition is <b>{{ monthly_tuition}}</b> $.</p>
   </details>
-  <details>
+  <details open>
     <summary><em>Location Gym</em></summary>
     <p>The province/city of the club is <b><u>{{ gym.location }}</u></b> And
       its more precise address is : </p><p><b>{{ gym.address_exact }}</b></p>
   </details>
-  <details>
+  <details open>
     <summary><em>Other Information</em></summary>
     <p>The Capacity of the Gym is <b><u>{{ gym.capacity_gym }}</u></b> Person.</p>
     <p>The Gender of the Gym is <b><u>{{ gym.get_gender_display }}</u></b> .</p>
