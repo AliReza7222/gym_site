@@ -150,16 +150,17 @@ class Gyms(models.Model):
 
     def register_person(self, user):
         capacity = self.capacity_gym
-        num_register = self.number_register_person
+        num_register = len(self.student_set.all())
         if capacity == num_register:
             self.state = 2
             self.save()
             return 0, 'full capacity'
 
-        elif capacity > num_register and self.state != 2:
-            self.number_register_person += 1
+        elif int(capacity) > num_register and self.state != 2:
+            self.number_register_person = num_register + 1
             self.student_set.add(user)
-            self.state = 1
+            if self.number_register_person == self.capacity_gym:
+                self.state = 2
             self.save()
             return 1, f'register {user}'
 
