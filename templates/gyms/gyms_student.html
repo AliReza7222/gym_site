@@ -1,0 +1,48 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block title %} Gyms Registered {% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/all_gyms.css' %}" type="text/css">
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block content %}
+<h1>Your Gyms</h1><hr>
+<p class="help">You Registered These Gyms , For See Information Gyms Click On Gym's Name.</p>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Field</th>
+      <th scope="col">Gender</th>
+      <th scope="col">Master</th>
+      <th scope="col">date Registered</th>
+      <th scope="col">Notifications</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for gym in gyms %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td><a href="{% url 'info_gym' gym.pk %}">{{ gym.name }}</a></td>
+      <td>{{ gym.get_field_sport_gym_display }}</td>
+      <td>{{ gym.get_gender_display }}</td>
+      <td>{{ gym.master }}</td>
+      {% for time in gym.time_register_student.all %}
+        {% if time.student_email == request.user.email %}
+          <td>{{ time }}</td>
+        {% endif %}
+      {% endfor %}
+      <td>#link</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

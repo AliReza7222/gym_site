@@ -5,7 +5,7 @@ from .validations import get_words
 from accounts.forms import FormRegisterUser
 from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE
 from .mixins import (CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin,
-                     RegisterStudentMixin)
+                     RegisterStudentMixin, StudentCheckUserMixin)
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
                     ChoiceTypeUser, FormStudentStepThree, FormGyms, ManagementForm)
 
@@ -514,6 +514,39 @@ class RegisterStudentGym(LoginRequiredMixin, RegisterStudentMixin, UpdateView):
                 return redirect('all_gyms')
 
 
+class RegisteredGymStudent(LoginRequiredMixin, StudentCheckUserMixin, ListView):
+    login_url = 'login'
+    model = Gyms
+    template_name = 'gyms/gyms_student.html'
 
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        student = request.user.student
+        gyms_student = student.gyms.all()
+        if not gyms_student:
+            messages.error(request, "you don't register any gyms .")
+            return redirect('profile')
+        self.extra_context = {'gyms': gyms_student}
+
+        allow_empty = self.get_allow_empty()
+        if not allow_empty:
+            # When pagination is enabled and object_list is a queryset,
+            # it's better to do a cheap query than to load the unpaginated
+            # queryset in memory.
+            if self.get_paginate_by(self.object_list) is not None and hasattr(
+                    self.object_list, "exists"
+            ):
+                is_empty = not self.object_list.exists()
+            else:
+                is_empty = not self.object_list
+            if is_empty:
+                raise Http404(
+                    "Empty list and “%(class_name)s.allow_empty” is False."
+                    % {
+                        "class_name": self.__class__.__name__,
+                    }
+                )
+        context = self.get_context_data()
+        return self.render_to_response(context)
 
 
