@@ -41,9 +41,10 @@ class CheckGymMasterMixin:
     def dispatch(self, request, *args, **kwargs):
         user = request.user
         pk_gym = kwargs.get('pk')
-        gym_master = Gyms.objects.filter(master=user.master, id=pk_gym)
-        if user.type_user == 'M' and gym_master:
-            return super().dispatch(request, *args, **kwargs)
+        if user.type_user == 'M':
+            gym_master = Gyms.objects.filter(master=user.master, id=pk_gym)
+            if gym_master:
+                return super().dispatch(request, *args, **kwargs)
 
         messages.error(request, 'you don\'t enter to this page !')
         return redirect('home')
@@ -58,3 +59,13 @@ class RegisterStudentMixin:
         elif user.type_user == 'M':
             messages.error(request, 'You Can not Register Because You are Not Student !')
             return redirect('all_gyms')
+
+
+class StudentCheckUserMixin:
+
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if user.type_user == 'S':
+            return super().dispatch(request, *args, **kwargs)
+        messages.error(request, 'You Can Not Enter This Page .')
+        return redirect('home')
