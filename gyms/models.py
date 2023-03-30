@@ -1,5 +1,6 @@
 import os.path
 import uuid
+from datetime import datetime
 
 from .validations import true_phone_number, check_national_code, get_words, check_exists_code_national
 
@@ -109,6 +110,18 @@ class Master(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 
+class TimeRegisterInGym(models.Model):
+    id = models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4)
+    gym_name = models.CharField(max_length=50)
+    student_email = models.EmailField()
+    time_register = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        time_str = self.time_register.strftime('%Y/%m/%d')
+        month_time = datetime.strftime(self.time_register, '%B')
+        return f'{time_str}|{month_time}'
+
+
 class Gyms(models.Model):
 
     GENDER_CHOICE = [
@@ -142,13 +155,14 @@ class Gyms(models.Model):
     number_register_person = models.PositiveIntegerField(default=0)
     master = models.ForeignKey(Master, on_delete=models.CASCADE)
     monthly_tuition = models.PositiveIntegerField()
+    time_register_student = models.ManyToManyField(TimeRegisterInGym, blank=True)
     address_exact = models.TextField()
 
     def master_gym(self, user):
         self.master = user
         self.save()
 
-    def register_person(self, user):
+    def register_person(self, user_student):
         capacity = self.capacity_gym
         num_register = len(self.student_set.all())
         if capacity == num_register:
@@ -158,11 +172,13 @@ class Gyms(models.Model):
 
         elif int(capacity) > num_register and self.state != 2:
             self.number_register_person = num_register + 1
-            self.student_set.add(user)
+            self.student_set.add(user_student)
+            obj = TimeRegisterInGym.objects.create(gym_name=self.name, student_email=user_student.user.email)
+            self.time_register_student.add(obj)
             if self.number_register_person == self.capacity_gym:
                 self.state = 2
             self.save()
-            return 1, f'register {user}'
+            return 1, f'register {user_student}'
 
         elif self.state == 2:
             return 0, 'full capacity'
