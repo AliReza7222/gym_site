@@ -525,7 +525,7 @@ class RegisteredGymStudent(LoginRequiredMixin, StudentCheckUserMixin, ListView):
         gyms_student = student.gyms.all()
         if not gyms_student:
             messages.error(request, "you don't register any gyms .")
-            return redirect('profile')
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
         self.extra_context = {'gyms': gyms_student}
 
         allow_empty = self.get_allow_empty()
