@@ -48,6 +48,8 @@
                     <div class="col-md-2">
                         <a href="{% url 'update_profile' user.pk %}" class="profile-edit-btn" >Edit Profile</a>
                         <br><br>
+                        <a href="{% url 'change_password_with_user' %}" class="profile-edit-btn" >Change Password</a>
+                        <br><br>
                         {% if user.type_user == 'M' %}
                             <a href="{% url 'gyms_master' %}" class="profile-edit-btn" >My Gym</a><br><br>
                             <a href="{% url 'money_transfer' %}" class="profile-edit-btn" >Money transfer</a>
