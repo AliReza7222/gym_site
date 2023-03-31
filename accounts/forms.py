@@ -45,20 +45,19 @@ class FormRegisterUser(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField()
+    username = forms.CharField(max_length=20)
     password = forms.CharField(widget=forms.PasswordInput)
 
 
 class ChangePasswordForm(forms.Form):
     email = forms.EmailField()
+    username = forms.CharField(max_length=20)
+
+
+class ChangePasswordWithUserForm(forms.Form):
+    past_password = forms.CharField(widget=forms.PasswordInput)
     new_password = forms.CharField(widget=forms.PasswordInput)
     re_new_password = forms.CharField(widget=forms.PasswordInput)
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if not MyUser.objects.filter(email=email).exists():
-            raise forms.ValidationError("email is incorrect ")
-        return email
 
     def clean_re_new_password(self):
         new_password, re_new_password = self.cleaned_data.get('new_password'), self.cleaned_data.get('re_new_password')
@@ -67,4 +66,5 @@ class ChangePasswordForm(forms.Form):
         elif len(new_password) < 7:
             raise forms.ValidationError("Password must be longer than 7 characters ...")
         return new_password
+
 

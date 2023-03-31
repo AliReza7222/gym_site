@@ -14,7 +14,7 @@
 <div style="text-align:center">
     <form method="post" >
       {% csrf_token %}
-          <input id="email" name="email" type="email" class="feedback-input" placeholder="Email" />
+          <input id="username" name="username" class="feedback-input" placeholder="Username" />
           <input id="password" name="password" type="password" class="feedback-input" placeholder="Password" />
           {% if form.errors %}
             {% for field in form %}

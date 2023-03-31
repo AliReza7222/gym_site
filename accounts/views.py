@@ -1,14 +1,25 @@
+import random
+import environs
+
+from string import digits, ascii_letters
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.views.generic import CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 
 from .models import MyUser
-from .forms import FormRegisterUser, LoginForm, ChangePasswordForm
+from .forms import FormRegisterUser, LoginForm, ChangePasswordForm, ChangePasswordWithUserForm
+
+
+# a variable env create
+env = environs.Env()
+env.read_env()
 
 
 def show_first_error(list_error):
@@ -46,13 +57,13 @@ class LoginUser(FormView):
         form = self.form_class(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            email, password = data.get('email'), data.get('password')
-            check_email = MyUser.objects.filter(email=email).exists()
+            username, password = data.get('username'), data.get('password')
+            check_email = MyUser.objects.filter(username=username).exists()
             if not check_email:
-                messages.error(request, 'The password or email is incorrect ....')
+                messages.error(request, 'The password or username is incorrect ....')
                 return redirect('login')
             elif check_email:
-                user = MyUser.objects.get(email=email)
+                user = MyUser.objects.get(username=username)
                 password_user = user.password
                 if check_password(password, password_user):
                     login(request, user)
@@ -60,9 +71,9 @@ class LoginUser(FormView):
                     if request.GET.get('next'):
                         return redirect(request.GET.get('next'))
                     return redirect('home')
-                messages.error(request, 'The password or email is incorrect ....')
+                messages.error(request, 'The password or username is incorrect ....')
                 return redirect('login')
-        messages.error(request, 'The password or email is incorrect ....')
+        messages.error(request, 'The password or username is incorrect ....')
         return redirect('login')
 
 
@@ -70,17 +81,38 @@ class ChangePassword(FormView):
     form_class = ChangePasswordForm
     template_name = 'accounts/change_password.html'
 
+    def generate_password(self):
+        list_words = list(digits + ascii_letters)
+        new_password = ''
+        for word in range(7):
+            new_password += random.choice(list_words)
+        return new_password
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
 
         if form.is_valid():
             data = form.cleaned_data
-            new_password, email = data.get('new_password'), data.get('email')
-            user = MyUser.objects.get(email=email)
-            user.set_password(new_password)
-            user.save()
-            messages.success(request, 'changed password your account')
-            return redirect('login')
+            username, email = data.get('username'), data.get('email')
+            get_user = MyUser.objects.filter(email=email, username=username)
+            if not get_user.exists():
+                messages.error(request, 'incorrect information .')
+                return redirect('change_password')
+            elif get_user.exists():
+                user = get_user[0]
+                new_password = self.generate_password()
+                # send Email
+                subject_mail = 'New Password your account Gym'
+                message = f'Hello mrs/mis {user} your new password account is "{new_password}" .'
+                from_email = env('FROM_EMAIL')
+                recipient_list = [email]
+                send_mail(subject_mail, message, from_email, recipient_list)
+                # set new password
+                user.set_password(new_password)
+                print(new_password)
+                user.save()
+                messages.success(request, 'Your new password send to your email .')
+                return redirect('login')
         messages.error(request, show_first_error(form.errors).get('text'))
         return redirect('change_password')
 
@@ -95,3 +127,30 @@ class LogoutUser(LoginRequiredMixin, FormView):
             messages.success(request, 'Logout Successfully !')
             return redirect('home')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class ChangePasswordWithUser(LoginRequiredMixin, FormView):
+    login_url = 'login'
+    template_name = 'accounts/change_password_user.html'
+    form_class = ChangePasswordWithUserForm
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        user = request.user
+        obj_form = self.form_class(data)
+
+        if obj_form.is_valid():
+            data_confirmed = obj_form.cleaned_data
+            checked_past_password = check_password(data_confirmed.get('past_password'), user.password)
+            if not checked_past_password:
+                messages.error(request, 'Past Password Incorrect !')
+                return redirect('change_password_with_user')
+            elif checked_past_password:
+                new_password = data_confirmed.get('new_password')
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, 'successfully changing password .')
+                return redirect('profile')
+        message_error = show_first_error(obj_form.errors)
+        messages.error(request, message_error.get('text').lstrip('*'))
+        return redirect('change_password_with_user')
