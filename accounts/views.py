@@ -109,7 +109,6 @@ class ChangePassword(FormView):
                 send_mail(subject_mail, message, from_email, recipient_list)
                 # set new password
                 user.set_password(new_password)
-                print(new_password)
                 user.save()
                 messages.success(request, 'Your new password send to your email .')
                 return redirect('login')
@@ -149,6 +148,7 @@ class ChangePasswordWithUser(LoginRequiredMixin, FormView):
                 new_password = data_confirmed.get('new_password')
                 user.set_password(new_password)
                 user.save()
+                login(request, user)
                 messages.success(request, 'successfully changing password .')
                 return redirect('profile')
         message_error = show_first_error(obj_form.errors)
