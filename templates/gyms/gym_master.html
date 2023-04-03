@@ -25,6 +25,7 @@
       <th scope="col">State</th>
       <th scope="col">Master</th>
       <th scope="col">Edit</th>
+      <th scope="col">Students</th>
       <th scope="col">Delete</th>
     </tr>
   </thead>
@@ -39,6 +40,7 @@
       <td>{{ gym.get_state_display }}</td>
       <td>{{ gym.master }}</td>
       <td><a href="{% url 'update_gym' gym.pk %}" class="e-link">Edit</a></td>
+      <td><a href="{% url 'students_gym' gym.pk %}" class="s-link">students</a></td>
       <td><a href="{% url 'delete_gym' gym.pk %}" onclick="gym_delete({{ forloop.counter}});"
              id="delete_gym_{{ forloop.counter }}" class="d-link">Delete</a></td>
     </tr>

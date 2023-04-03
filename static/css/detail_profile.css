@@ -47,9 +47,10 @@ body{
     cursor: pointer;
 }
 .profile-edit-btn:hover{
-     color: #007bff;;
+     color: #007bff;
+     text-decoration: none;
 }
-.profile-edit-btn::before {
+.profile-edit-btn:before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -60,9 +61,11 @@ body{
   background-color: #333;
   transform: scaleX(0);
   transition: transform 0.3s ease-in-out;
+
 }
-.profile-edit-btn:hover::before {
+.profile-edit-btn:hover:before {
   transform: scaleX(1);
+
 }
 .proile-rating{
     font-size: 12px;
