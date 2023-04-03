@@ -550,3 +550,68 @@ class RegisteredGymStudent(LoginRequiredMixin, StudentCheckUserMixin, ListView):
         return self.render_to_response(context)
 
 
+class StudentsGyms(LoginRequiredMixin, CheckUserMasterMixin, ListView):
+    login_url = 'login'
+    model = Student
+    template_name = 'gyms/student_gym.html'
+    context_object_name = 'students_gym'
+    paginate_by = 25
+
+    def students_gym(self):
+        gym = Gyms.objects.get(id=self.kwargs.get('pk'))
+        students_gym = gym.student_set.all()
+        return students_gym, gym
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        if len(self.students_gym()[0]) == 0:
+            messages.error(request, 'No one has registered in this Gym.')
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
+        self.extra_context = {'gym': self.students_gym()[1]}
+        allow_empty = self.get_allow_empty()
+        if not allow_empty:
+            # When pagination is enabled and object_list is a queryset,
+            # it's better to do a cheap query than to load the unpaginated
+            # queryset in memory.
+            if self.get_paginate_by(self.object_list) is not None and hasattr(
+                    self.object_list, "exists"
+            ):
+                is_empty = not self.object_list.exists()
+            else:
+                is_empty = not self.object_list
+            if is_empty:
+                raise Http404(
+                    "Empty list and “%(class_name)s.allow_empty” is False."
+                    % {
+                        "class_name": self.__class__.__name__,
+                    }
+                )
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def get_queryset(self):
+        data = self.request.GET
+        students_gym = self.students_gym()[0]
+        number_student = [str(index_student) for index_student in range(1, len(students_gym) + 1)]
+        query_set = list(zip(number_student, students_gym))
+        student_name, student_email = data.get('name'), data.get('email')
+        student_phone_number, student_age = data.get('phone_number'), data.get('age')
+        q = Q()
+
+        if student_name:
+            q &= (Q(first_name__icontains=student_name) | Q(last_name__icontains=student_name))
+        if student_email:
+            student_email = student_email.strip().strip('%09').replace('%40', '@')
+            q &= Q(user__email=student_email)
+        if student_age:
+            q &= Q(age=student_age)
+        if student_phone_number:
+            q &= Q(number_phone=student_phone_number)
+
+        if student_age or student_name or student_email or student_phone_number:
+            students_desired = Student.objects.filter(q, gyms__in=[self.students_gym()[1]])
+            number_student = [str(student_index) for student_index in range(1, len(students_desired) + 1)]
+            query_set = list(zip(number_student, students_desired))
+            self.paginate_by = None
+
+        return query_set

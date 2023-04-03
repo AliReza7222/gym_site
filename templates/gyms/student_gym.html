@@ -1,0 +1,90 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %} Students Gym {% endblock %}
+
+{% block link %}
+<link href="{% static 'css/students_gym.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
+{% block script %}
+{% endblock %}
+
+{% block full_content %}
+<div class="list-student">
+    <h1 style="text-align:center">Students List Gym {{ gym.name }}</h1>
+    <hr>
+        <p class="help">You can find the desired student by email or name or age or phone number search .</p>
+        <div class="row">
+          <form method="get">
+            <input type="text" class="field" placeholder="search name student " name="name">
+            <input type="text" class="field" placeholder="search email student " name="email">
+            <input type="text" class="field" placeholder="search phone number student " name="phone_number">
+            <input type="text" class="field" placeholder="search age student " name="age">
+            <button type="submit" class="button">Search</button>
+          </form>
+        </div>
+    <hr>
+    <table class="table no-border">
+      <thead>
+        <tr>
+          <th >#</th>
+          <th >Image Profile</th>
+          <th >Full Name</th>
+          <th >Email</th>
+          <th >Gender</th>
+          <th >age</th>
+          <th >Phone Number</th>
+          <th >Time Register</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for num, student in students_gym %}
+          <tr>
+            <td>{{num}}</td>
+            <td><a href="{{ student.image_person.url }}"><img src="{{ student.image_person.url }}" ></a></td>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>{{ student.get_gender_display }}</td>
+            <td>{{ student.age }}</td>
+            <td>{{ student.number_phone }}</td>
+            {% for time_register in gym.time_register_student.all %}
+                {% if time_register.student_email == student.user.email and time_register.gym_name == gym.name %}
+                        <td>{{ time_register }}</td>
+                {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if is_paginated %}
+            <hr><br>
+            <div class="container">
+                  <ul class="row">
+                    {% if page_obj.has_previous %}
+                      &ensp;&ensp;
+                      <li><a href="?page={{ page_obj.previous_page_number }}" class="button-link">Previous</a></li>
+                      &ensp;&ensp;
+                    {% endif %}
+                <!--    {% for i in paginator.page_range %}-->
+                <!--      {% if page_obj.number == i %}-->
+                <!--        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>-->
+                <!--      {% else %}-->
+                <!--        <li><a href="?page={{ i }}">{{ i }}</a></li>-->
+                <!--      {% endif %}-->
+                <!--    {% endfor %}-->
+                    {% if page_obj.has_next %}
+                      <li><a href="?page={{ page_obj.next_page_number }}" class="button-link">Next</a></li>
+                    {% endif %}
+                  </ul>
+            </div>
+            {% if is_paginated %}
+                    <p class="num-page">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </p>
+            {% endif %}
+            <hr>
+    {% endif %}
+</div>
+{% endblock %}

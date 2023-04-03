@@ -1,0 +1,130 @@
+.list-student{
+    margin: 0 30px;
+}
+
+img {
+  border-radius: 50%;
+  width: 72px;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+  .button {
+    background-color: #1E90FF;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #006400;
+  }
+
+  .field {
+    border-radius: 4px;
+    padding: 8px 12px;
+    border: 2px solid #ccc;
+    font-size: 14px;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    width: 250px;
+  }
+
+  .field:focus {
+    outline: none;
+    box-shadow: 0px 2px 5px #389396;
+  }
+
+.help {
+  text-align:center;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #134708;
+  background-color: #f7f7f7;
+  border-left: 5px solid #0B8E05;
+  border-right: 5px solid #0B8E05;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.no-border tr td, .no-border tr th {
+  border: none;
+}
+
+table th:first-child,
+table td:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+table th:last-child,
+table td:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+td, th {
+  border: none;
+}
+
+th {
+  background-color: #F1F5B9;
+}
+
+tr:nth-child(even) {
+  background-color: #D1F7FD;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+
+.container{
+    text-align:center;
+}
+
+.button-link {
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  background-color: #27797C;
+  transition: transform 0.3s ease;
+}
+
+.button-link:hover {
+  background-color: #5DB16A;
+  color: white;
+  text-decoration: none;
+  transform: scale(1.1);
+}
+
+ul{
+    list-style-type: none;
+}
+
+.num-page {
+  text-align:center;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #134708;
+  background-color: #f7f7f7;
+  border-left: 5px solid #0B8985;
+  border-right: 5px solid #0B8985;
+  padding: 5px;
+  margin-bottom: 20px;
+}
