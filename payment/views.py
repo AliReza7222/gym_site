@@ -54,6 +54,7 @@ class PaymentGatewaySimulator(LoginRequiredMixin, CheckUserStudentMixin, FormVie
 
             else:
                 user.student.credit += data_confirm.get('credit_student')
+                cache.delete(user.student.id)
                 user.student.save()
                 messages.success(request, f"Your account {data_confirm.get('credit_student')} money was charged .")
                 return redirect('home')
@@ -139,6 +140,7 @@ class MoneyTransferSimulator(LoginRequiredMixin, CheckUserMasterMixin, FormView)
                     messages.error(request, 'Your unique code has expired.')
             else:
                 master = request.user.master
+                cache.delete(request.user.master.id)
 
                 if student_user:
                     student_id = student_user[0].id
