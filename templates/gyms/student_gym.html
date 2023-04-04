@@ -9,13 +9,15 @@
 
 
 {% block script %}
+<script src="{% static 'js/delete_studnet_window.js' %}"></script>
 {% endblock %}
 
 {% block full_content %}
 <div class="list-student">
     <h1 style="text-align:center">Students List Gym {{ gym.name }}</h1>
     <hr>
-        <p class="help">You can find the desired student by email or name or age or phone number search .</p>
+        <p class="help">You can find the desired student by email or name or age or phone number search ,
+            for back to list your gyms <a href="{% url 'gyms_master' %}" class="button-back">click here</a>.</p>
         <div class="row">
           <form method="get">
             <input type="text" class="field" placeholder="search name student " name="name">
@@ -37,6 +39,7 @@
           <th >age</th>
           <th >Phone Number</th>
           <th >Time Register</th>
+          <th>Remove</th>
         </tr>
       </thead>
       <tbody>
@@ -54,6 +57,8 @@
                         <td>{{ time_register }}</td>
                 {% endif %}
             {% endfor %}
+            <td><a href="{% url 'remove_student' student.pk gym.pk %}" id="num_student_{{forloop.counter}}"
+                   class="d-link" onclick="remove_student({{forloop.counter}});">remove</a></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -84,7 +89,7 @@
                                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                     </p>
             {% endif %}
-            <hr>
     {% endif %}
+    <hr>
 </div>
 {% endblock %}

@@ -128,3 +128,44 @@ ul{
   padding: 5px;
   margin-bottom: 20px;
 }
+
+.d-link {
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    text-decoration: none;
+}
+
+.d-link:before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: red;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
+    text-decoration: none;
+}
+
+.d-link:hover:before {
+    transform: scaleX(1);
+}
+
+.d-link:hover{
+    color: #FF7F7F;
+    text-decoration: none;
+}
+
+.button-back {
+  color: red;
+}
+
+.button-back:hover {
+  color: #F07474;
+}

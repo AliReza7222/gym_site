@@ -3,7 +3,7 @@ import os.path
 from accounts.views import show_first_error
 from .validations import get_words
 from accounts.forms import FormRegisterUser
-from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE
+from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE, TimeRegisterInGym
 from .mixins import (CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin,
                      RegisterStudentMixin, StudentCheckUserMixin)
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
@@ -618,3 +618,28 @@ class StudentsGyms(LoginRequiredMixin, CheckUserMasterMixin, ListView):
             self.paginate_by = None
 
         return query_set
+
+
+class DeleteStudentsOfGym(LoginRequiredMixin, CheckUserMasterMixin, DeleteView):
+    login_url = 'login'
+    model = Gyms
+
+    def get(self, request, *args, **kwargs):
+        result = request.GET.get('result')
+        if result == 'true':
+            gym = Gyms.objects.get(id=kwargs.get('pk_g'))
+            student = Student.objects.get(id=kwargs.get('pk_s'))
+            time_register = TimeRegisterInGym.objects.get(gym_name=gym.name, student_email=student.user.email)
+            gym.student_set.remove(student)
+            gym.time_register_student.remove(time_register)
+            time_register.delete()
+            gym.number_register_person -= 1
+            if gym.state == 2:
+                gym.state = 1
+            gym.save()
+            if gym.number_register_person == 0:
+                messages.success(request,
+                                 f'{student.first_name} {student.last_name} was removed from gym and now your gym is empty !')
+                return redirect('gyms_master')
+            messages.success(request, f'{student.first_name} {student.last_name} removed of gym .')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
