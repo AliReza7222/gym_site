@@ -267,3 +267,23 @@ b{
     color: black;
     text-decoration: none;
 }
+
+.position-list-master{
+    margin: 0 30px;
+}
+
+.help-list-master {
+  text-align:center;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #134708;
+  background-color: #f7f7f7;
+  border-left: 5px solid #2D779C;
+  border-right: 5px solid #2D779C;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.head-list-master{
+    text-align:center;
+}

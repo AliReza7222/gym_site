@@ -11,9 +11,9 @@
   <script src="{% static 'js/delete_gym.js' %}"></script>
 {% endblock %}
 
-{% block content %}
-<h1>Your Gyms</h1><hr>
-<p class="help">A list of all founded gyms by you.</p>
+{% block full_content %}
+<h1 class="head-list-master">Your Gyms</h1>
+<div class="position-list-master"><hr>
 <table class="table">
   <thead class="thead-dark">
     <tr>
@@ -47,5 +47,5 @@
   {% endfor %}
   </tbody>
 </table>
-
+</div>
 {% endblock %}
