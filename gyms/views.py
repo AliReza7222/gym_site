@@ -421,6 +421,9 @@ class DeleteGymMaster(LoginRequiredMixin, CheckGymMasterMixin, DeleteView):
             pk_gym = kwargs.get('pk')
             gym = Gyms.objects.get(pk=pk_gym)
             name_gym = gym.name
+            if len(gym.student_set.all()) > 0:
+                messages.error(request, 'You cannot delete this gym because students are registered in this gym.')
+                return HttpResponseRedirect(request.META['HTTP_REFERER'])
             gym.delete()
             messages.success(request, f'Successfully Delete your Gym {name_gym} .')
             return redirect('gyms_master')
