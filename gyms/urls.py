@@ -5,7 +5,8 @@ from django.conf.urls.static import static
 
 from .views import (Home, About, ProfileUser, ShowProfile, UpdateProfile, CreateGym,
                     AllGyms, InformationGym, ListGymsMaster, DeleteGymMaster, UpdateGymMaster,
-                    RegisterStudentGym, SendInfoGym, RegisteredGymStudent, StudentsGyms, DeleteStudentsOfGym)
+                    RegisterStudentGym, SendInfoGym, RegisteredGymStudent, StudentsGyms, DeleteStudentsOfGym,
+                    RemoveAllStudents)
 
 
 urlpatterns = [
@@ -24,7 +25,8 @@ urlpatterns = [
     path('get_gym_info/<uuid:pk>/', SendInfoGym.as_view(), name='get_gym_info'),
     path('registered_gyms/', RegisteredGymStudent.as_view(), name='registered_gyms'),
     path('students_gym/<uuid:pk>/', StudentsGyms.as_view(), name='students_gym'),
-    path('remove_student/<uuid:pk_s>/<uuid:pk_g>/', DeleteStudentsOfGym.as_view(), name='remove_student')
+    path('remove_student/<uuid:pk_s>/<uuid:pk_g>/', DeleteStudentsOfGym.as_view(), name='remove_student'),
+    path('remove_all_students/<uuid:pk_g>/', RemoveAllStudents.as_view(), name='remove_all_students')
 
 ]
 

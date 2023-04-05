@@ -143,7 +143,7 @@ class Gyms(models.Model):
         (2, "full capacity")
     ]
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    name = models.CharField(max_length=50, validators=[get_words])
+    name = models.CharField(max_length=30, validators=[get_words])
     gender = models.CharField(max_length=2, choices=GENDER_CHOICE)
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     field_sport_gym = models.IntegerField(choices=FIELD_SPORTS_CHOICE)
@@ -185,6 +185,16 @@ class Gyms(models.Model):
 
     def __str__(self):
         return f'{self.name}/({self.time_start_working})-({self.time_end_working})/{self.get_field_sport_gym_display()}'
+
+
+class BlockStudent(models.Model):
+    id = models.UUIDField(editable=False, default=uuid.uuid4, primary_key=True)
+    gym = models.ForeignKey(Gyms, on_delete=models.CASCADE)
+    email_student = models.EmailField()
+
+    def __str__(self):
+        return f'{self.email_student} | {self.gym.name}'
+
 
 
 class Student(models.Model):

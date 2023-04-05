@@ -495,8 +495,13 @@ class RegisterStudentGym(LoginRequiredMixin, RegisterStudentMixin, UpdateView):
         user = request.user
         gym = Gyms.objects.get(id=kwargs.get('pk'))
         master_gym, tuition_gym = gym.master, gym.monthly_tuition
+        black_list = gym.blockstudent_set.values_list('email_student', flat=True)
         student = user.student
-        if student in gym.student_set.all():
+        if user.email in black_list:
+            message = 'You cannot register in this gym because you are blocked by the master.'
+            messages.error(request, message)
+            return redirect('all_gyms')
+        elif student in gym.student_set.all():
             messages.error(request, 'You are already registered in this gym.')
             return redirect('all_gyms')
         elif student.credit < tuition_gym:
@@ -642,4 +647,27 @@ class DeleteStudentsOfGym(LoginRequiredMixin, CheckUserMasterMixin, DeleteView):
                                  f'{student.first_name} {student.last_name} was removed from gym and now your gym is empty !')
                 return redirect('gyms_master')
             messages.success(request, f'{student.first_name} {student.last_name} removed of gym .')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class RemoveAllStudents(LoginRequiredMixin, CheckUserMasterMixin, DeleteView):
+    login_url = 'login'
+    model = Gyms
+
+    def get(self, request, *args, **kwargs):
+        result = request.GET.get('result')
+        if result == 'true':
+            gym = Gyms.objects.get(id=kwargs.get('pk_g'))
+            if gym.number_register_person == 0:
+                messages.error(request, 'No one has registered in this gym !')
+                return redirect('gyms_master')
+            gym.time_register_student.clear()
+            gym.student_set.clear()
+            gym.number_register_person = 0
+            if gym.state == 2:
+                gym.state = 1
+            gym.save()
+            message = 'Your gym students have all been removed from the gym.'
+            messages.success(request, message)
+            return redirect('gyms_master')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
