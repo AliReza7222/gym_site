@@ -53,7 +53,7 @@
             <td>{{ student.age }}</td>
             <td>{{ student.number_phone }}</td>
             {% for time_register in gym.time_register_student.all %}
-                {% if time_register.student_email == student.user.email and time_register.gym_name == gym.name %}
+                {% if time_register.student_email == student.user.email and time_register.gym_id == gym.id %}
                         <td>{{ time_register }}</td>
                 {% endif %}
             {% endfor %}

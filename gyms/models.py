@@ -112,7 +112,7 @@ class Master(models.Model):
 
 class TimeRegisterInGym(models.Model):
     id = models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4)
-    gym_name = models.CharField(max_length=50)
+    gym_id = models.UUIDField(editable=False)
     student_email = models.EmailField()
     time_register = models.DateTimeField(auto_now=True)
 
@@ -173,7 +173,7 @@ class Gyms(models.Model):
         elif int(capacity) > num_register and self.state != 2:
             self.number_register_person = num_register + 1
             self.student_set.add(user_student)
-            obj = TimeRegisterInGym.objects.create(gym_name=self.name, student_email=user_student.user.email)
+            obj = TimeRegisterInGym.objects.create(gym_id=self.id, student_email=user_student.user.email)
             self.time_register_student.add(obj)
             if self.number_register_person == self.capacity_gym:
                 self.state = 2
@@ -194,7 +194,6 @@ class BlockStudent(models.Model):
 
     def __str__(self):
         return f'{self.email_student} | {self.gym.name}'
-
 
 
 class Student(models.Model):
