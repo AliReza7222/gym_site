@@ -1,0 +1,57 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/black_list.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+{% endblock %}
+
+{% block script %}{% endblock %}
+
+
+{% block content %}
+<h1> Black List Gym <b>{{ gym.name }}</b></h1><hr>
+<p class="help">On this page you can block a student by entering the students email and you can see the blacklist below. </p>
+
+<div class="page">
+    <form class="row g-3 mx-auto" method="post">
+      {% csrf_token %}
+      <div class="col-auto">
+        <input type="email" class="input-model" id="inputEmail"
+               name="email" placeholder="Enter Email">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="button">Block</button>
+      </div>
+    </form>
+</div><hr>
+<h2 style="text-align:center">Blocked List</h2>
+{% if black_list %}
+  <div class="page">
+  <table>
+    <thead>
+      <tr>
+        <th>Number</th>
+        <th>Email</th>
+        <th>Unblock</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for user in black_list %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user }}</td>
+            <td>#link-unblock</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% else %}
+  <div class="alert alert-primary message-attention" role="alert">
+    There is no blacklisted student.
+  </div>
+{% endif %}
+{% endblock %}

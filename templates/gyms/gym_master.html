@@ -40,7 +40,7 @@
       <td>{{ gym.location }}</td>
       <td>{{ gym.get_state_display }}</td>
       <td><a href="{% url 'update_gym' gym.pk %}" class="e-link">Edit</a></td>
-      <td><a href="#" class="black-link">Block List</a></td>
+      <td><a href="{% url 'black_list' gym.pk %}" class="black-link">Block List</a></td>
       <td><a href="{% url 'students_gym' gym.pk %}" class="s-link">students</a></td>
       <td><a href="{% url 'delete_gym' gym.pk %}" onclick="gym_delete({{ forloop.counter}});"
              id="delete_gym_{{ forloop.counter }}" class="d-link">Delete</a></td>
