@@ -3,7 +3,7 @@ import os.path
 from accounts.views import show_first_error
 from .validations import get_words
 from accounts.forms import FormRegisterUser
-from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE, TimeRegisterInGym
+from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE, TimeRegisterInGym, BlockStudent
 from .mixins import (CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin,
                      RegisterStudentMixin, StudentCheckUserMixin)
 from .forms import (FormLocationStepOne, FormMasterStepTwo,
@@ -11,14 +11,14 @@ from .forms import (FormLocationStepOne, FormMasterStepTwo,
 
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.conf import settings
 from formtools.wizard.views import SessionWizardView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-from django.views.generic import TemplateView, DetailView, ListView, CreateView, DeleteView, RedirectView
+from django.views.generic import TemplateView, DetailView, ListView, CreateView, DeleteView, RedirectView, FormView
 from django.views.generic.edit import UpdateView
 
 
@@ -276,11 +276,12 @@ class CreateGym(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
         form = FormGyms(data)
         if form.is_valid():
             data_confirm = form.cleaned_data
-            name, location_gym = data_confirm.get('name'), data_confirm.get('location')
+            name, location_gym = data_confirm.get('name').title(), data_confirm.get('location')
             if Gyms.objects.filter(name=name, location=location_gym).exists():
                 messages.error(request, 'A Gym With Name exists This Location !')
                 return HttpResponseRedirect(request.META['HTTP_REFERER'])
             data_confirm['master'] = user.master
+            data_confirm['name'] = name
             Gyms.objects.create(**data_confirm)
             message = 'Gym Successfully Created !'
             messages.success(request, message)
@@ -459,7 +460,8 @@ class UpdateGymMaster(LoginRequiredMixin, CheckGymMasterMixin, UpdateView):
 
         if form_obj.is_valid():
             form_confirm = form_obj.cleaned_data
-            name = form_confirm.get('name')
+            name = form_confirm.get('name').title()
+            form_confirm['name'] = name
             if gym.name != name and Gyms.objects.filter(name=name, location=obj_location):
                 messages.error(request, 'A Gym With Name Exists This Location !')
                 return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -634,7 +636,7 @@ class DeleteStudentsOfGym(LoginRequiredMixin, CheckUserMasterMixin, DeleteView):
         if result == 'true':
             gym = Gyms.objects.get(id=kwargs.get('pk_g'))
             student = Student.objects.get(id=kwargs.get('pk_s'))
-            time_register = TimeRegisterInGym.objects.get(gym_name=gym.name, student_email=student.user.email)
+            time_register = TimeRegisterInGym.objects.get(gym_id=gym.id, student_email=student.user.email)
             gym.student_set.remove(student)
             gym.time_register_student.remove(time_register)
             time_register.delete()
@@ -670,4 +672,27 @@ class RemoveAllStudents(LoginRequiredMixin, CheckUserMasterMixin, DeleteView):
             message = 'Your gym students have all been removed from the gym.'
             messages.success(request, message)
             return redirect('gyms_master')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class RecordBlockStudent(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
+    login_url = 'login'
+    model = BlockStudent
+    template_name = 'gyms/view_block_list.html'
+    fields = ['email_student']
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        gym = Gyms.objects.get(id=kwargs.get('pk'))
+        black_list = gym.blockstudent_set.values_list('email_student', flat=True)
+        self.extra_context = {'gym': gym, "black_list": black_list}
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        email, gym = request.POST.get('email'), Gyms.objects.get(id=kwargs.get('pk'))
+        if email:
+            BlockStudent.objects.create(email_student=email, gym=gym)
+            messages.success(request, 'block successfully .')
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
+        messages.error(request, 'A Error Exists ...')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
