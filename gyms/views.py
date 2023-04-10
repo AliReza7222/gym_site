@@ -2,6 +2,7 @@ import os.path
 
 from accounts.views import show_first_error
 from .validations import get_words
+from .utils import create_location
 from accounts.forms import FormRegisterUser
 from .models import Locations, Master, Student, MyUser, Gyms, FIELD_SPORTS_CHOICE, TimeRegisterInGym, BlockStudent
 from .mixins import (CheckCompleteProfileMixin, CheckNotCompleteProfileMixin, CheckUserMasterMixin, CheckGymMasterMixin,
@@ -35,6 +36,14 @@ class ProfileUser(LoginRequiredMixin, CheckCompleteProfileMixin, SessionWizardVi
     login_url = 'login'
     template_name = 'gyms/profile.html'
     STEP_ONE, STEP_TWO, STEP_THREE, STEP_FOUR = '0', '1', '2', '3'
+
+    def get(self, request, *args, **kwargs):
+        if len(Locations.objects.all()) == 0:
+            create_location()
+        self.storage.reset()
+        # reset the current step to the first step.
+        self.storage.current_step = self.steps.first
+        return self.render(self.get_form())
 
     def check_type_user_master(self):
         data = self.storage.get_step_data('1')
@@ -80,7 +89,8 @@ class ProfileUser(LoginRequiredMixin, CheckCompleteProfileMixin, SessionWizardVi
             if form_obj.is_valid():
                 clean_data = {'province': data.get('0-province'), 'name_city': data.get('0-name_city').title()}
                 # create or get object location with data in request POST
-                obj, created = Locations.objects.get_or_create(**clean_data)
+                if not Locations.objects.filter(province=clean_data.get('province'), name_city=clean_data.get('name_city')).exists:
+                    obj, created = Locations.objects.get_or_create(**clean_data)
 
         # Look for a wizard_goto_step element in the posted data which
         # contains a valid step name. If one was found, render the requested
@@ -129,6 +139,8 @@ class ProfileUser(LoginRequiredMixin, CheckCompleteProfileMixin, SessionWizardVi
 
         # get object location
         data_location = self.get_cleaned_data_for_step('0')
+        province = Locations.PROVINCE_CHOICE
+        data_location['province'] = province[int(data_location.get('province')) - 1][1]
         obj_location = Locations.objects.filter(province=data_location.get('province'),
                                                 name_city=data_location.get('name_city').title()).first()
 
