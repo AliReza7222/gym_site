@@ -324,7 +324,7 @@ class AllGyms(ListView):
             for code, name_province in locations:
                 if province_gym.title() == name_province:
                     province_gym = code
-                    q &= Q(location__province=province_gym)
+                    q &= Q(location__province=name_province)
                     break
             if province_gym == data.get('province'):
                 province_gym = '0'
