@@ -87,9 +87,12 @@ class ProfileUser(LoginRequiredMixin, CheckCompleteProfileMixin, SessionWizardVi
             data = self.request.POST
             form_obj = self.get_form(step=self.STEP_ONE, data=data)
             if form_obj.is_valid():
-                clean_data = {'province': data.get('0-province'), 'name_city': data.get('0-name_city').title()}
+                province = Locations.PROVINCE_CHOICE
+                clean_data = {'province': province[int(data.get('0-province')) - 1][1],
+                              'name_city': data.get('0-name_city').title()}
                 # create or get object location with data in request POST
-                if not Locations.objects.filter(province=clean_data.get('province'), name_city=clean_data.get('name_city')).exists:
+                if not Locations.objects.filter(province=clean_data.get('province'),
+                                                name_city=clean_data.get('name_city')).exists():
                     obj, created = Locations.objects.get_or_create(**clean_data)
 
         # Look for a wizard_goto_step element in the posted data which

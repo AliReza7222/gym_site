@@ -15,8 +15,15 @@ body {
   min-width: 300px;
 }
 
+
 h1 {
   text-align: center;
+  font-size: 3em;
+  font-weight: bold;
+  font-family: 'Times New Roman', serif;
+  color: #333;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
 input {
@@ -26,6 +33,62 @@ input {
   font-family: Raleway;
   border: 1px solid #aaaaaa;
 }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select {
+  background-color: #f4f4f4;
+  color: #333;
+  font-size: 1em;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  border: 2px solid #ccc;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="number"]:hover,
+select:hover {
+  background-color: #e9e9e9;
+  border-color: #999;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  border-color: #66afe9;
+}
+input[type="file"] {
+  color: #333;
+  font-size: 1em;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  border: 2px solid #ccc;
+}
+
+input[type="file"]:hover {
+  background-color: #e9e9e9;
+  border-color: #999;
+}
+
+input[type="file"]:focus {
+  outline: none;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  border-color: #66afe9;
+}
+
 
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
@@ -84,4 +147,32 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+.next-btn,
+.prev-btn {
+  background-color: #085D7F;
+  border: none;
+  color: #C9DFE8;
+  padding: 3px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 7px 2px;
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+  background-color: #1EA0D6;
+  text-decoration: none;
+  color: #fff;
+}
+
+.prev-btn:hover {
+  background-color: #1EA0D6;
+  text-decoration: none;
+  color: #fff;
 }
