@@ -49,6 +49,12 @@
                                     CreateGym
                                 </a>
                             </li>
+                            &emsp;
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'gyms_master' %}">
+                                    MyGym
+                                </a>
+                            </li>
                         {% elif request.user.type_user == 'S' %}
                             &emsp;
                             <li class="nav-item">
