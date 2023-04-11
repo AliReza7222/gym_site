@@ -518,6 +518,11 @@ class RegisterStudentGym(LoginRequiredMixin, RegisterStudentMixin, UpdateView):
             message = 'You cannot register in this gym because you are blocked by the master.'
             messages.error(request, message)
             return redirect('all_gyms')
+        elif student.get_gender_display() != gym.get_gender_display() and gym.gender != 'fm':
+            message = 'You cannot register at the gym because your gender is not the same as the gender of the gym.'
+            messages.error(request, message)
+            return redirect('all_gyms')
+
         elif student in gym.student_set.all():
             messages.error(request, 'You are already registered in this gym.')
             return redirect('all_gyms')
