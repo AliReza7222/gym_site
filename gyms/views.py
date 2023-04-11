@@ -708,3 +708,15 @@ class RecordBlockStudent(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         messages.error(request, 'A Error Exists ...')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class UnBlockStudent(LoginRequiredMixin, CheckUserMasterMixin, RedirectView):
+    login_url = 'login'
+
+    def get(self, request, *args, **kwargs):
+        gym = Gyms.objects.get(id=kwargs.get('pk'))
+        block_student = BlockStudent.objects.filter(gym=gym, email_student=kwargs.get('user')).first()
+        block_student.delete()
+        messages.success(request, f'{kwargs.get("user")} UnBlocked .')
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+

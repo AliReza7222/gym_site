@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from .views import (Home, About, ProfileUser, ShowProfile, UpdateProfile, CreateGym,
                     AllGyms, InformationGym, ListGymsMaster, DeleteGymMaster, UpdateGymMaster,
                     RegisterStudentGym, SendInfoGym, RegisteredGymStudent, StudentsGyms, DeleteStudentsOfGym,
-                    RemoveAllStudents, RecordBlockStudent)
+                    RemoveAllStudents, RecordBlockStudent, UnBlockStudent)
 
 
 urlpatterns = [
@@ -27,7 +27,8 @@ urlpatterns = [
     path('students_gym/<uuid:pk>/', StudentsGyms.as_view(), name='students_gym'),
     path('remove_student/<uuid:pk_s>/<uuid:pk_g>/', DeleteStudentsOfGym.as_view(), name='remove_student'),
     path('remove_all_students/<uuid:pk_g>/', RemoveAllStudents.as_view(), name='remove_all_students'),
-    path('black_list_gym/<uuid:pk>/', RecordBlockStudent.as_view(), name='black_list')
+    path('black_list_gym/<uuid:pk>/', RecordBlockStudent.as_view(), name='black_list'),
+    path('un_block_student/<uuid:pk>/<str:user>/', UnBlockStudent.as_view(), name='unblock'),
 
 ]
 

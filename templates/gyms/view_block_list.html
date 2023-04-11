@@ -43,7 +43,7 @@
           <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ user }}</td>
-            <td>#link-unblock</td>
+            <td><a href="{% url 'unblock' gym.pk user %}" class="black-link">unblock</a></td>
           </tr>
         {% endfor %}
     </tbody>
