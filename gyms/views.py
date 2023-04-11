@@ -703,8 +703,11 @@ class RecordBlockStudent(LoginRequiredMixin, CheckUserMasterMixin, CreateView):
     def post(self, request, *args, **kwargs):
         email, gym = request.POST.get('email'), Gyms.objects.get(id=kwargs.get('pk'))
         if email:
-            BlockStudent.objects.create(email_student=email, gym=gym)
-            messages.success(request, 'block successfully .')
+            if not BlockStudent.objects.filter(email_student=email, gym=gym).exists():
+                BlockStudent.objects.create(email_student=email, gym=gym)
+                messages.success(request, 'block successfully .')
+            else:
+                messages.error(request, f"{email} has already been blocked.")
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         messages.error(request, 'A Error Exists ...')
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
