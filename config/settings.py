@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts',
     'gyms',
     'payment',
+    'conversation',
     'formtools',
     'multiselectfield',
     'bootstrap4',
