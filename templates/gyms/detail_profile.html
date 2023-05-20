@@ -51,10 +51,10 @@
                         <a href="{% url 'change_password_with_user' %}" class="profile-edit-btn" >Change Password</a>
                         <br><br>
                         {% if user.type_user == 'M' %}
-                            <a href="{% url 'gyms_master' %}" class="profile-edit-btn" >My Gym</a><br><br>
+                            <a href="#" class="profile-edit-btn">Questions</a><br><br>
                             <a href="{% url 'money_transfer' %}" class="profile-edit-btn" >Money transfer</a>
                         {% elif user.type_user == 'S' %}
-                            <a href="{% url 'registered_gyms' %}" class="profile-edit-btn" >Gym Registered</a><br><br>
+                            <a href="#" class="profile-edit-btn" >Answers</a><br><br>
                             <a href="{% url 'payment_simulator' %}" class="profile-edit-btn" >Charging Account</a>
                         {% endif %}
                     </div>
