@@ -35,8 +35,6 @@ def check_exists_code_national(value):
     return value
 
 
-
-
 def get_words(value):
     get_input = re.findall('[a-zA-Z\s]+', value)
     if len(get_input) == 1:
