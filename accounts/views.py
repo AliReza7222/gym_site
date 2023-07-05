@@ -1,5 +1,6 @@
 import random
 import environs
+import re
 
 from string import digits, ascii_letters
 
@@ -14,7 +15,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login, logout, authenticate
 
 from .models import MyUser
+from gyms.models import Student
 from .forms import FormRegisterUser, LoginForm, ChangePasswordForm, ChangePasswordWithUserForm
+from conversation.views import return_type_info_note
 
 
 # a variable env create
@@ -67,6 +70,14 @@ class LoginUser(FormView):
                 password_user = user.password
                 if check_password(password, password_user):
                     login(request, user)
+                    if user.type_user == 'S':
+                        student = Student.objects.get(user=user)
+                        type_new_notification = return_type_info_note(student)
+                        if student.new_notification != '0' and type_new_notification == str:
+                            messages.info(request, student.new_notification)
+                            student.new_notification = str(re.findall('gym \w+ ',
+                                                                      student.new_notification)[0].strip().split(' '))
+                            student.save()
                     messages.success(request, 'login successfully !')
                     if request.GET.get('next'):
                         return redirect(request.GET.get('next'))
