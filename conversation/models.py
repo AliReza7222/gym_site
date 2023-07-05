@@ -38,6 +38,9 @@ class Notification(models.Model):
     time_notification = models.DateTimeField(auto_now=True)
     master = models.ForeignKey(Master, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.topic}/{self.message[:20]}.....'
+
     class Meta:
         index_together = [
             ('gym', 'topic', 'time_notification')
