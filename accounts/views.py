@@ -74,7 +74,7 @@ class LoginUser(FormView):
                         student = Student.objects.get(user=user)
                         type_new_notification = return_type_info_note(student)
                         if student.new_notification != '0' and type_new_notification == str:
-                            messages.info(request, student.new_notification)
+                            messages.info(request, "You have New Notification please check your gym's inbox")
                             student.new_notification = str(re.findall('gym \w+ ',
                                                                       student.new_notification)[0].strip().split(' '))
                             student.save()
