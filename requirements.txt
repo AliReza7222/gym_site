@@ -30,7 +30,7 @@ executing==1.2.0
 hyperlink==21.0.0
 idna==3.4
 incremental==22.10.0
-ipython==8.9.0
+ipython==8.10.0
 jedi==0.18.2
 kavenegar==1.1.2
 marshmallow==3.19.0
