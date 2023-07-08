@@ -1,6 +1,8 @@
 import os.path
+import re
 
 from accounts.views import show_first_error
+from conversation.views import return_type_info_note
 from .validations import get_words
 from .utils import create_location
 from accounts.forms import FormRegisterUser
@@ -25,6 +27,20 @@ from django.views.generic.edit import UpdateView
 
 class Home(TemplateView):
     template_name = 'gyms/home.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            if user.type_user == 'S':
+                student = user.student
+                type_new_notification = return_type_info_note(student)
+                if student.new_notification != '0' and type_new_notification == str:
+                    messages.info(request, "You have New Notification please check your gym's inbox")
+                    student.new_notification = str(re.findall('gym \w+ ',
+                                                              student.new_notification)[0].strip().split(' '))
+                    student.save()
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
 
 
 class About(TemplateView):
@@ -553,10 +569,14 @@ class RegisteredGymStudent(LoginRequiredMixin, StudentCheckUserMixin, ListView):
         self.object_list = self.get_queryset()
         student = request.user.student
         gyms_student = student.gyms.all()
+        info_note = False
         if not gyms_student:
             messages.error(request, "you don't register any gyms .")
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
-        self.extra_context = {'gyms': gyms_student}
+        type_new_notification = return_type_info_note(student)
+        if type_new_notification == list:
+            info_note = eval(student.new_notification)[1]
+        self.extra_context = {'gyms': gyms_student, 'info_note': info_note}
 
         allow_empty = self.get_allow_empty()
         if not allow_empty:
