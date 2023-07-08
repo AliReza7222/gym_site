@@ -1,0 +1,67 @@
+{% extends '_base.html' %}
+{% load static %}
+
+
+{% block title %}
+    List Created Notifications
+{% endblock %}
+
+{% block link %}
+  <link rel="stylesheet" href="{% static 'css/all_gyms.css' %}" type="text/css">
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'js/delete_gym.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="position-list-master"><hr>
+<h1>List Created Notifications</h1>
+  <hr>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Topic</th>
+      <th scope="col">Gym</th>
+      <th scope="col">Message</th>
+      <th scope="col">Time</th>
+      <th scope="col">Remove</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for note in notes %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td><a style="color:Blue">{{ note.topic }}</a></td>
+      <td><a style="color:#295320"> {{ note.gym.name }}</a></td>
+      <td><span class="break-word">
+        <b style="color:#2E2C2C">{{ note.message }}</b>
+      </span></td>
+      <td style="color:green">{{ note.time_notification }}</td>
+      <td><a href="{% url 'remove_note' note.pk %}" onclick="remove_note({{ forloop.counter}});"
+             id="note_master_{{ forloop.counter }}" class="d-link">remove</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if is_paginated %}
+    <div class="pagination pagination-centered">
+        <p class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
+
+{% endblock %}
