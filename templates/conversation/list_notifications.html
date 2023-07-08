@@ -12,8 +12,8 @@
 
 
 {% block content %}
-<h1>Inbox</h1>
-<div class="position-list-master"><hr>
+<div class="position-list-master">
+    <h1>Inbox</h1><hr>
     <table class="table">
       <thead class="thead-dark">
         <tr>
@@ -28,9 +28,11 @@
         {% with forloop.counter0|add:page_obj.start_index as counter %}
             <tr>
                 <th scope="row">{{ counter }}</th>
-                <th scope="row">{{ note.topic }}</th>
-                <th scope="row"><span class="break-word"> {{ note.message }} </span></th>
-                <th scope="row">{{ note.time_notification }}</th>
+                <th scope="row"><b>
+                    <a>{{ note.topic }}</a>
+                </b></th>
+                <th scope="row"><span class="break-word"> <b style="color:#2E2C2C">{{ note.message }}</b> </span></th>
+                <th scope="row"><a><b style="color:green">{{ note.time_notification }}</b></a></th>
             </tr>
         {% endwith %}
     {% endfor %}

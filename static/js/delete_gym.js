@@ -20,3 +20,13 @@ function clear_gym(forloop_counter) {
   }
 }
 
+function remove_note(forloop_counter) {
+  var result = confirm("Are you sure you want Delete This Notification ?" );
+
+  if (result) {
+    var url = document.getElementById("note_master_" + forloop_counter).href;
+    url = url + "?result=" + result;
+    document.getElementById("note_master_" + forloop_counter).href = url;
+    window.location.href = "{% url 'login' %}";
+  }
+}

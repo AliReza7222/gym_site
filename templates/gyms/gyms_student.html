@@ -24,8 +24,7 @@
       <th scope="col">Gender</th>
       <th scope="col">Master</th>
       <th scope="col">date Registered</th>
-      <th scope="col">Question</th>
-      <th scope="col">Notifications</th>
+      <th scope="col">Inbox</th>
     </tr>
   </thead>
   <tbody>
@@ -41,8 +40,12 @@
           <td>{{ time }}</td>
         {% endif %}
       {% endfor %}
-      <td>#ask</td>
-      <td>#link</td>
+      <td><a href="{% url 'list_note' gym.pk %}" class="n-link">
+        Click here
+        {% if info_note == gym.name %}
+            <span class="badge badge-danger">new</span>
+        {% endif %}
+      </a></td>
     </tr>
   {% endfor %}
   </tbody>

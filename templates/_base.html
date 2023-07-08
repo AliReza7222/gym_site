@@ -35,10 +35,19 @@
                           </div>
                         </div>
                   {% elif message.tags == 'error' %}
+                        <div class="text-center">
                           <div class="alert alert-danger" role="alert">
                               <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
                                 {{ message }}
                           </div>
+                        </div>
+                  {% elif message.tags == 'info' %}
+                        <div class="text-center">
+                          <div class="alert alert-primary" role="alert">
+                              <span class="closebtn" onclick="this.parentElement.style.display='none';" dir="rtl">&times;</span>
+                                {{ message }}
+                          </div>
+                        </div>
                   {% endif %}
              {% endif %}
         {% endfor %}
