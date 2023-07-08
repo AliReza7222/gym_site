@@ -54,7 +54,7 @@ python-dotenv==1.0.0
 python-utils==3.4.5
 pytz==2022.7.1
 redis==4.5.4
-requests==2.28.2
+requests==2.31.0
 service-identity==21.1.0
 six==1.16.0
 soupsieve==2.4
