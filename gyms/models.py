@@ -214,6 +214,7 @@ class Student(models.Model):
     gyms = models.ManyToManyField(Gyms, blank=True)
     favorite_sport = MultiSelectField(choices=FIELD_SPORTS_CHOICE, max_choices=100, max_length=100)
     credit = models.PositiveIntegerField(default=0, editable=False)
+    new_notification = models.TextField(default='0')
 
     def delete(self, using=None, keep_parents=False):
         self.image_person.storage.delete(str(self.image_person.name))
